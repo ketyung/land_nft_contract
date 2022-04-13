@@ -115,6 +115,7 @@ impl LandNft {
         self.media_types.clone()
     }
 
+
     pub fn media_type_count(&self) -> usize{
 
         if let Some(ref vector) = self.media_types {
