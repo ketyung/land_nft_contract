@@ -65,7 +65,7 @@ pub fn get_land_nft_media_types (deps: Deps,  _env : Env, _key : String, media_t
 
     let media_types = land_nft.all_media_types();
 
-    let mut return_media_types : Vec<LandNftMediaType> = Vec::new();
+    let mut return_media_types : Vec<LandNftMediaType> = vec![];
 
     if media_types.is_some() {
 
