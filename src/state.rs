@@ -16,6 +16,23 @@ pub const MEDIA_TYPE_IMAGE : u8 = 1;
 
 pub const MEDIA_TYPE_VIDEO : u8 = 2;
 
+#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
+pub struct LandNftRoyalty {
+
+    pub creator_wallet : Addr, 
+
+    pub index : u8, 
+
+    pub royalty : u16, 
+
+    pub date_updated : Option<Timestamp>, 
+}
+
+impl PartialEq for LandNftRoyalty {
+    fn eq(&self, other: &Self) -> bool {
+        self.creator_wallet == other.creator_wallet
+    }
+}
 
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct LandNftMediaType {
@@ -56,6 +73,8 @@ pub struct LandNft {
 
     media_types : Option<Vec<LandNftMediaType>>,
 
+    royalties : Option<Vec<LandNftRoyalty>>,
+
     pub date_created : Timestamp,
 
     pub date_updated : Timestamp, 
@@ -72,13 +91,15 @@ impl LandNft {
             update_authority : update_authority, size : size,
             addr: Some(addr), total_lands : total_lands, price : price, 
             price_denom: Some(String::from(DEFAULT_PRICE_DENOM)),
-            media_types : None, 
+            media_types : None, royalties : None,
             date_created : date_created, date_updated : date_created  };
         
         return new_land;
 
     }
+}
 
+impl LandNft{
     pub fn add_media_type(&mut self, media_type : LandNftMediaType, date_updated : Timestamp ){
 
         self.date_updated = date_updated;
@@ -128,13 +149,56 @@ impl LandNft {
 
 }
 
+impl LandNft {
 
-// We define a custom struct for each query response
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct LandNftMediaTypesResponse {
+    pub fn add_royalty(&mut self, royalty : LandNftRoyalty, date_updated : Timestamp ){
 
-    pub media_types : Vec<LandNftMediaType>,
+        self.date_updated = date_updated;
+
+        if self.royalties == None {
+            let v :Vec<LandNftRoyalty> = Vec::new();
+            self.royalties = Some(v);
+        }
+
+        if let Some(ref mut vector) = self.royalties {
+            if !vector.contains(&royalty){
+                vector.push(royalty);
+            }
+        }
+    }
+
+
+    pub fn remove_royalty(&mut self, creator_wallet : Addr, date_updated : Timestamp){
+
+        self.date_updated = date_updated;
+
+        if let Some(ref mut vector) = self.royalties {
+                
+            let royalty = vector.iter().position(|r| r.creator_wallet == creator_wallet );
+
+            if royalty.is_some() {
+                vector.remove(royalty.unwrap());
+            }
+        }
+    }
+
+    pub fn all_royalties(&self) -> Option<Vec<LandNftRoyalty>>{
+
+        self.royalties.clone()
+    }
+
+    pub fn royalty_count(&self) -> usize{
+
+        if let Some(ref vector) = self.royalties {
+            
+            return vector.len();
+        }
+
+        return 0; 
+    }
+
 }
+
 
 
 

@@ -1,6 +1,7 @@
 use cosmwasm_std::{DepsMut, Deps, Env, Response, Addr, StdResult};
 use crate::error::ContractError;
-use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftMediaTypesResponse};
+use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty};
+use crate::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse};
 
 pub fn add_land_nft(deps: DepsMut,  _env : Env, _key : String , update_authority : Addr, 
     size : u64, addr : String, total_lands : u16, price : u64) -> Result<Response, ContractError> {
@@ -22,13 +23,52 @@ pub fn add_land_nft(deps: DepsMut,  _env : Env, _key : String , update_authority
 
 
 
-pub fn add_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,media_type : LandNftMediaType) -> Result<Response, ContractError> {
+pub fn add_land_nft_royalty(deps: DepsMut,  _env : Env, _key : String ,mut royalty :LandNftRoyalty) -> Result<Response, ContractError> {
    
     let stored_land = LAND_NFTS.key(_key.as_str());
     
     let mut land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
 
     let date_updated = _env.block.time;
+    royalty.date_updated = Some(date_updated);
+
+    land_nft.add_royalty(royalty, date_updated);
+    
+    LAND_NFTS.save(deps.storage, _key.as_str(), &land_nft)?;
+
+    Ok(Response::new().add_attribute("method", "add_royalty"))
+}
+
+
+
+pub fn get_all_land_nft_royalties (deps: Deps,  _env : Env, _key : String ) -> StdResult<LandNftRoyaltiesResponse>{
+
+    let stored_land = LAND_NFTS.key(_key.as_str());
+    
+    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
+
+    let royalties = land_nft.all_royalties();
+
+    let mut return_royalties : Vec<LandNftRoyalty> = Vec::new();
+
+    if royalties.is_some() {
+
+        return_royalties = royalties.unwrap();
+    }
+
+    Ok (LandNftRoyaltiesResponse { royalties : return_royalties })
+
+}
+
+
+pub fn add_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,mut media_type : LandNftMediaType) -> Result<Response, ContractError> {
+   
+    let stored_land = LAND_NFTS.key(_key.as_str());
+    
+    let mut land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
+
+    let date_updated = _env.block.time;
+    media_type.date_updated = Some(date_updated);
 
     land_nft.add_media_type(media_type, date_updated);
     
