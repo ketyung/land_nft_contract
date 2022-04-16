@@ -125,6 +125,7 @@ mod tests {
         show_size!(Option<Vec<LandNftMediaType>>);
         show_size!(Vec<Box<LandNftMediaType>>);
         show_size!(LandNft);
+        show_size!(cw_storage_plus::Map<&str, LandNft>);
 
     }
   
