@@ -10,6 +10,24 @@ pub struct State {
     pub owner: Addr,
 }
 
+#[derive(Serialize, Deserialize, Clone, JsonSchema, Debug, Default)]
+pub struct Attribute {
+    
+    pub display_type: Option<String>,
+    
+    pub attribute_type: String,
+    
+    pub value: Option<String>,
+
+}
+
+impl PartialEq for Attribute {
+    fn eq(&self, other: &Self) -> bool {
+        self.attribute_type == other.attribute_type
+    }
+}
+
+
 pub const STATE: Item<State> = Item::new("state");
 
 pub const MEDIA_TYPE_IMAGE : u8 = 1;
@@ -75,6 +93,8 @@ pub struct LandNft {
 
     royalties : Option<Vec<LandNftRoyalty>>,
 
+    other_attributes : Option<Vec<Attribute>>,
+
     pub date_created : Timestamp,
 
     pub date_updated : Timestamp, 
@@ -91,7 +111,7 @@ impl LandNft {
             update_authority : update_authority, size : size,
             addr: Some(addr), total_lands : total_lands, price : price, 
             price_denom: Some(String::from(DEFAULT_PRICE_DENOM)),
-            media_types : None, royalties : None,
+            media_types : None, royalties : None, other_attributes : None, 
             date_created : date_created, date_updated : date_created  };
         
         return new_land;
@@ -122,11 +142,10 @@ impl LandNft{
 
         if let Some(ref mut vector) = self.media_types {
                 
-            let media_type = vector.iter().position(|m| *m.url == url );
+            let pos : Option<usize> = vector.iter().position(|m| *m.url == url );
 
-            if media_type.is_some() {
-
-                vector.remove(media_type.unwrap());
+            if pos.is_some() {
+                vector.remove(pos.unwrap());
             }
         }
     }
@@ -174,10 +193,10 @@ impl LandNft {
 
         if let Some(ref mut vector) = self.royalties {
                 
-            let royalty = vector.iter().position(|r| r.creator_wallet == creator_wallet );
+            let pos : Option <usize> = vector.iter().position(|r| r.creator_wallet == creator_wallet );
 
-            if royalty.is_some() {
-                vector.remove(royalty.unwrap());
+            if pos.is_some() {
+                vector.remove(pos.unwrap());
             }
         }
     }
@@ -199,6 +218,55 @@ impl LandNft {
 
 }
 
+
+
+impl LandNft {
+
+    pub fn add_other_attribute(&mut self, attribute : Attribute ){
+
+
+        if self.other_attributes == None {
+            let v :Vec<Attribute> = vec![];
+            self.other_attributes = Some(v);
+        }
+
+        if let Some(ref mut vector) = self.other_attributes {
+            if !vector.contains(&attribute){
+                vector.push(attribute);
+            }
+        }
+    }
+
+
+    pub fn remove_other_attribute(&mut self, attribute_type : String ){
+
+        if let Some(ref mut vector) = self.other_attributes {
+            
+            let pos : Option<usize>  = vector.iter().position(|r| r.attribute_type == attribute_type );
+
+            if pos.is_some() {
+                vector.remove(pos.unwrap());
+            }
+        } 
+    
+    }
+
+    pub fn all_other_attributes(&self) -> Option<Vec<Attribute>>{
+
+        self.other_attributes.clone()
+    }
+
+    pub fn other_attributes_count(&self) -> usize{
+
+        if let Some(ref vector) = self.other_attributes {
+            
+            return vector.len();
+        }
+
+        return 0; 
+    }
+
+}
 
 
 
