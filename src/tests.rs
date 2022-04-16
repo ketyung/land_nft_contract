@@ -51,10 +51,13 @@ mod tests {
         let key = String::from("key0001");
         let info = mock_info("terra1qchccaxyrzk8a4yxu6y2vwzc48jak8qmqm9qtg", &coins(2, "token"));
 
-        let update_authority = info.sender.clone();
+        let owner = info.sender.clone();
 
         let mut deps = mock_dependencies(&coins(2, "token"));
-        let res = add_land_nft(deps.as_mut(), mock_env(),key.clone() , update_authority, 1200, String::from("Tmn Kingfisher 3"), 1280, 560);
+        let res = add_land_nft_by_key( 
+            key.clone(), 
+            deps.as_mut(), mock_env(), 
+            owner,1200, String::from("Tmn Kingfisher 3"), 1280, 560);
 
         println!("\n\nadded.land.nft:: {:?}", res);
 

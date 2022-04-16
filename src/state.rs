@@ -68,9 +68,37 @@ impl PartialEq for LandNftMediaType {
     }
 }
 
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct Counter {
+    count: u32,
+}
+
+impl Counter {
+
+    pub fn new() -> Counter{
+        
+        Counter{ count : 1}
+    }
+
+    pub fn increment(&mut self) {
+
+        self.count+=1;   
+    }
+
+    pub fn get_count(&self) -> u32{
+
+        self.count
+    }
+}
+
 pub const DEFAULT_PRICE_DENOM : &str = "uusd";
 
-pub const LAND_NFTS : Map<&str, LandNft> = Map::new("neworld.land_nfts");
+pub const LAND_NFT_COUNTER: Item<Counter> = Item::new("land_nft_counter");
+
+pub const LAND_NFT_KEY_PREFIX : &str = "land_nft";
+
+pub const LAND_NFTS : Map<&str, LandNft> = Map::new("land_nfts");
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct LandNft {
@@ -124,6 +152,13 @@ impl LandNft {
         Self::new( Addr::unchecked("xxxxx"),  0,
         String::from("xxxx"), 0,0, date_created )
     }
+
+
+    pub fn key(count : u32) -> String {
+
+        format!("{}_{}", LAND_NFT_KEY_PREFIX, count)
+    }
+
 }
 
 impl LandNft{

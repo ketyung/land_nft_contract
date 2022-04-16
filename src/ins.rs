@@ -1,9 +1,35 @@
 use cosmwasm_std::{DepsMut, Deps, Env, Response, Addr, StdResult};
 use crate::error::ContractError;
-use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty};
+use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty, LAND_NFT_COUNTER, Counter};
 use crate::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse};
 
-pub fn add_land_nft(deps: DepsMut,  _env : Env, _key : String , update_authority : Addr, 
+
+pub fn add_land_nft(deps: DepsMut,  _env : Env, 
+    owner : Addr, size : u64, addr : String, 
+    total_lands : u16, price : u64) -> Result<Response, ContractError> {
+   
+    let counter = LAND_NFT_COUNTER.update(deps.storage, |mut counter| -> Result<_, ContractError> {
+        counter.increment();
+        Ok(counter)
+    });
+
+    match counter {
+
+        Ok(c) => add_land_nft_by_key(LandNft::key(c.get_count()), 
+        deps, _env, owner, size, addr, total_lands, price) ,
+
+        Err(_) => {
+            
+            let c = Counter::new();
+            let _ = LAND_NFT_COUNTER.save(deps.storage, &c);
+            let key = LandNft::key(c.get_count());
+            add_land_nft_by_key(key, deps, _env, owner , size, addr, total_lands, price) 
+
+        },
+    }
+
+}
+pub fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,  owner : Addr, 
     size : u64, addr : String, total_lands : u16, price : u64) -> Result<Response, ContractError> {
    
     let stored_land = LAND_NFTS.key(_key.as_str());
@@ -13,7 +39,7 @@ pub fn add_land_nft(deps: DepsMut,  _env : Env, _key : String , update_authority
 
     let date_created = _env.block.time;
 
-    let new_land = LandNft::new ( update_authority,size,
+    let new_land = LandNft::new ( owner ,size,
     addr, total_lands, price, date_created );
 
     LAND_NFTS.save(deps.storage, _key.as_str(), &new_land)?;
