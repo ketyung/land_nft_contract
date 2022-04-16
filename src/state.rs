@@ -117,6 +117,13 @@ impl LandNft {
         return new_land;
 
     }
+
+
+    pub fn default(date_created : Timestamp) -> LandNft{
+
+        Self::new( Addr::unchecked("xxxxx"),  0,
+        String::from("xxxx"), 0,0, date_created )
+    }
 }
 
 impl LandNft{

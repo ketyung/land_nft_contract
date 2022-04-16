@@ -7,6 +7,7 @@ mod tests {
     use crate::contract::*;
     use crate::ins::*;
     use crate::state::*;
+    use std::mem::size_of;
 
     #[test]
     fn proper_initialization() {
@@ -105,5 +106,26 @@ mod tests {
 
     }
 
+
+    macro_rules! show_size {
+        (header) => (
+            println!("{:<22} {:>4}    {}", "Type", "T", "Option<T>");
+        );
+        ($t:ty) => (
+            println!("{:<22} {:4} {:4}", stringify!($t), size_of::<$t>(), size_of::<Option<$t>>())
+        )
+    }
+    
+
+    #[test]
+    fn test_show_sizes(){
+
+        show_size!(Box<Vec<LandNftMediaType>>);
+        show_size!(Vec<LandNftMediaType>);
+        show_size!(Option<Vec<LandNftMediaType>>);
+        show_size!(Vec<Box<LandNftMediaType>>);
+        show_size!(LandNft);
+
+    }
   
 }
