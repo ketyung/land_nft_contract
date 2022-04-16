@@ -105,7 +105,7 @@ pub struct LandNft {
 
     pub key : Option<String>,
 
-    pub update_authority : Addr, 
+    pub owner : Addr, 
 
     pub size : u64, 
 
@@ -130,13 +130,13 @@ pub struct LandNft {
 
 impl LandNft {
 
-    pub fn new( update_authority : Addr, 
+    pub fn new( owner : Addr, 
         size : u64, addr : String, 
         total_lands : u16, price : u64, 
         date_created : Timestamp) -> LandNft {
 
         let new_land = LandNft { key : None, 
-            update_authority : update_authority, size : size,
+            owner : owner, size : size,
             addr: Some(addr), total_lands : total_lands, price : price, 
             price_denom: Some(String::from(DEFAULT_PRICE_DENOM)),
             media_types : None, royalties : None, other_attributes : None, 

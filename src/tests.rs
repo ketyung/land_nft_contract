@@ -7,6 +7,7 @@ mod tests {
     use crate::contract::*;
     use crate::ins::*;
     use crate::state::*;
+    use crate::get::*;
     use std::mem::size_of;
 
     #[test]
@@ -63,7 +64,7 @@ mod tests {
 
         for n in 1..4 {
 
-            let _ = add_land_nft_media_type(deps.as_mut(), mock_env(), key.clone(), LandNftMediaType{
+            let res = add_land_nft_media_type(deps.as_mut(), mock_env(), key.clone(), LandNftMediaType{
                 url : format!( "https://youtube.be/772hxxh_{}", n * 1000),
                 media_type : MEDIA_TYPE_VIDEO,
                 date_updated : None, 

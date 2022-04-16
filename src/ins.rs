@@ -1,7 +1,6 @@
-use cosmwasm_std::{DepsMut, Deps, Env, Response, Addr, StdResult};
+use cosmwasm_std::{DepsMut, Env, Response, Addr,};
 use crate::error::ContractError;
 use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty, LAND_NFT_COUNTER, Counter};
-use crate::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse};
 
 
 pub fn add_land_nft(deps: DepsMut,  _env : Env, 
@@ -44,7 +43,7 @@ pub fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,  owner : 
 
     LAND_NFTS.save(deps.storage, _key.as_str(), &new_land)?;
 
-    Ok(Response::new().add_attribute("method", "add_land_nft"))
+    Ok(Response::new().add_attribute("key", _key).add_attribute("method", "add_land_nft"))
 }
 
 
@@ -67,25 +66,6 @@ pub fn add_land_nft_royalty(deps: DepsMut,  _env : Env, _key : String ,mut royal
 
 
 
-pub fn get_all_land_nft_royalties (deps: Deps,  _env : Env, _key : String ) -> StdResult<LandNftRoyaltiesResponse>{
-
-    let stored_land = LAND_NFTS.key(_key.as_str());
-    
-    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
-
-    let royalties = land_nft.all_royalties();
-
-    let mut return_royalties : Vec<LandNftRoyalty> = Vec::new();
-
-    if royalties.is_some() {
-
-        return_royalties = royalties.unwrap();
-    }
-
-    Ok (LandNftRoyaltiesResponse { royalties : return_royalties })
-
-}
-
 
 pub fn add_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,mut media_type : LandNftMediaType) -> Result<Response, ContractError> {
    
@@ -101,43 +81,4 @@ pub fn add_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,mut me
     LAND_NFTS.save(deps.storage, _key.as_str(), &land_nft)?;
 
     Ok(Response::new().add_attribute("method", "add_media_type"))
-}
-
-pub fn get_all_land_nft_media_types (deps: Deps,  _env : Env, _key : String ) -> StdResult<LandNftMediaTypesResponse>{
-
-    let stored_land = LAND_NFTS.key(_key.as_str());
-    
-    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
-
-    let media_types = land_nft.all_media_types();
-
-    let mut return_media_types : Vec<LandNftMediaType> = Vec::new();
-
-    if media_types.is_some() {
-
-        return_media_types = media_types.unwrap();
-    }
-
-    Ok (LandNftMediaTypesResponse { media_types : return_media_types})
-
-}
-
-
-pub fn get_land_nft_media_types (deps: Deps,  _env : Env, _key : String, media_type : u8 ) -> StdResult<LandNftMediaTypesResponse>{
-
-    let stored_land = LAND_NFTS.key(_key.as_str());
-    
-    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
-
-    let media_types = land_nft.all_media_types();
-
-    let mut return_media_types : Vec<LandNftMediaType> = vec![];
-
-    if media_types.is_some() {
-
-        return_media_types = media_types.unwrap().into_iter().filter(|mt| mt.media_type == media_type).collect::<Vec<LandNftMediaType>>();
-    }
-
-    Ok (LandNftMediaTypesResponse { media_types : return_media_types})
-
 }
