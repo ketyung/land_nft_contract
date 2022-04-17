@@ -1,6 +1,6 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-
+use cosmwasm_std::Addr;
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
     pub count: i32,
@@ -26,6 +26,13 @@ pub enum ExecuteMsg {
         url : String,
         media_type : u8,
         is_default : bool,
+    },
+
+    AddLandNftRoyalty {
+        for_key : String, 
+        creator_wallet : Addr,
+        index  : u8,
+        royalty : u16,
     },
 
 }

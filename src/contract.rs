@@ -5,8 +5,8 @@ use cw2::set_contract_version;
 
 use crate::error::ContractError;
 use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
-use crate::state::{State, STATE, LandNftMediaType};
-use crate::ins::{add_land_nft, add_land_nft_media_type};
+use crate::state::{State, STATE, LandNftMediaType, LandNftRoyalty};
+use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty};
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:counter";
@@ -59,6 +59,19 @@ pub fn execute(
                 media_type, is_default : is_default, date_updated : Some(_env.block.time) };
             add_land_nft_media_type(deps, _env, info,for_key,media_type)
 
+        },
+
+        ExecuteMsg::AddLandNftRoyalty {
+            for_key,
+            creator_wallet,
+            index,
+            royalty,
+        } => {
+
+            let royalty = LandNftRoyalty{ creator_wallet : creator_wallet, index : index, 
+                royalty : royalty, date_updated : Some(_env.block.time)};
+            add_land_nft_royalty(deps, _env, info, for_key, royalty)
+            
         },
     }
 }
