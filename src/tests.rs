@@ -2,14 +2,13 @@
 mod tests {
   
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-    use cosmwasm_std::{coins, from_binary, Addr};
-    use crate::msg::*;
-    use crate::contract::*;
+    use cosmwasm_std::{coins,  Addr};
     use crate::ins::*;
     use crate::state::*;
     use crate::get::*;
     use std::mem::size_of;
 
+    /*
     #[test]
     fn proper_initialization() {
         let mut deps = mock_dependencies(&[]);
@@ -25,7 +24,7 @@ mod tests {
         let res = query(deps.as_ref(), mock_env(), QueryMsg::GetCount {}).unwrap();
         let value: CountResponse = from_binary(&res).unwrap();
         assert_eq!(17, value.count);
-    }
+    }*/
 
   
 

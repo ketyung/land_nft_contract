@@ -4,8 +4,8 @@ use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response,
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
-use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
-use crate::state::{State, STATE, LandNftMediaType, LandNftRoyalty};
+use crate::msg::{ ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::state::{LandNftMediaType, LandNftRoyalty};
 use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty};
 use crate::get::{get_all_land_nfts, get_land_nft_media_types, get_land_nft_royalties};
 
@@ -20,13 +20,8 @@ pub fn instantiate(
     info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
-    let state = State {
-        count: msg.count,
-        owner: info.sender.clone(),
-    };
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
-    STATE.save(deps.storage, &state)?;
-
+   
     Ok(Response::new()
         .add_attribute("method", "instantiate")
         .add_attribute("owner", info.sender)
@@ -79,8 +74,7 @@ pub fn execute(
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::GetCount {} => to_binary(&query_count(deps)?),
-
+       
         QueryMsg::GetAllLandNfts { start_after, limit } =>
         to_binary(&get_all_land_nfts(deps, start_after, limit)?),
 
@@ -90,10 +84,5 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         QueryMsg::GetLandNftRoyalties { for_key } => 
         to_binary(&get_land_nft_royalties(deps, for_key)?),
     }
-}
-
-fn query_count(deps: Deps) -> StdResult<CountResponse> {
-    let state = STATE.load(deps.storage)?;
-    Ok(CountResponse { count: state.count })
 }
 

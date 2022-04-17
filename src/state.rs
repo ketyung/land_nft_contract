@@ -1,14 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-
 use cosmwasm_std::{Addr, Timestamp};
 use cw_storage_plus::{Item, Map};
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct State {
-    pub count: i32,
-    pub owner: Addr,
-}
 
 #[derive(Serialize, Deserialize, Clone, JsonSchema, Debug, Default)]
 pub struct Attribute {
@@ -27,8 +20,6 @@ impl PartialEq for Attribute {
     }
 }
 
-
-pub const STATE: Item<State> = Item::new("state");
 
 pub const MEDIA_TYPE_IMAGE : u8 = 1;
 

@@ -5,11 +5,73 @@
     {
       "type": "object",
       "required": [
-        "get_count"
+        "get_all_land_nfts"
       ],
       "properties": {
-        "get_count": {
-          "type": "object"
+        "get_all_land_nfts": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "format": "uint32",
+              "minimum": 0.0
+            },
+            "start_after": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "get_land_nft_media_types"
+      ],
+      "properties": {
+        "get_land_nft_media_types": {
+          "type": "object",
+          "required": [
+            "for_key",
+            "media_type"
+          ],
+          "properties": {
+            "for_key": {
+              "type": "string"
+            },
+            "media_type": {
+              "type": "integer",
+              "format": "uint8",
+              "minimum": 0.0
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "get_land_nft_royalties"
+      ],
+      "properties": {
+        "get_land_nft_royalties": {
+          "type": "object",
+          "required": [
+            "for_key"
+          ],
+          "properties": {
+            "for_key": {
+              "type": "string"
+            }
+          }
         }
       },
       "additionalProperties": false
