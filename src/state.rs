@@ -59,6 +59,8 @@ pub struct LandNftMediaType {
 
     pub media_type : u8, 
 
+    pub is_default : bool,
+
     pub date_updated : Option<Timestamp>, 
 }
 
@@ -70,31 +72,31 @@ impl PartialEq for LandNftMediaType {
 
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct Counter {
-    count: u32,
+pub struct IndexCounter {
+    index : u32,
 }
 
-impl Counter {
+impl IndexCounter {
 
-    pub fn new() -> Counter{
+    pub fn new() -> IndexCounter{
         
-        Counter{ count : 1}
+        IndexCounter{ index : 1}
     }
 
     pub fn increment(&mut self) {
 
-        self.count+=1;   
+        self.index += 1;   
     }
 
-    pub fn get_count(&self) -> u32{
+    pub fn get_index(&self) -> u32{
 
-        self.count
+        self.index 
     }
 }
 
 pub const DEFAULT_PRICE_DENOM : &str = "uusd";
 
-pub const LAND_NFT_COUNTER: Item<Counter> = Item::new("land_nft_counter");
+pub const LAND_NFT_COUNTER: Item<IndexCounter> = Item::new("land_nft_counter");
 
 pub const LAND_NFT_KEY_PREFIX : &str = "land_nft";
 
@@ -159,9 +161,9 @@ impl LandNft {
     }
 
 
-    pub fn key(count : u32) -> String {
+    pub fn key(index : u32) -> String {
 
-        format!("{}_{}", LAND_NFT_KEY_PREFIX, count)
+        format!("{}_{}", LAND_NFT_KEY_PREFIX, index )
     }
 
 }

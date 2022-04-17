@@ -22,3 +22,10 @@ pub struct LandNftsResponse {
 
     pub land_nfts : Vec<LandNft>,
 }
+
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct LandNftResponse {
+    
+    pub land_nft : LandNft,
+}

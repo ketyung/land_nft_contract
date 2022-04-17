@@ -1,6 +1,6 @@
 use cosmwasm_std::{DepsMut, Env, Response, Addr,};
 use crate::error::ContractError;
-use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty, LAND_NFT_COUNTER, Counter};
+use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty, LAND_NFT_COUNTER, IndexCounter};
 
 
 pub fn add_land_nft(deps: DepsMut,  _env : Env, 
@@ -14,14 +14,14 @@ pub fn add_land_nft(deps: DepsMut,  _env : Env,
 
     match counter {
 
-        Ok(c) => add_land_nft_by_key(LandNft::key(c.get_count()), 
+        Ok(c) => add_land_nft_by_key(LandNft::key(c.get_index()), 
         deps, _env, owner, size, addr, total_lands, price) ,
 
         Err(_) => {
             
-            let c = Counter::new();
+            let c = IndexCounter::new();
             let _ = LAND_NFT_COUNTER.save(deps.storage, &c);
-            let key = LandNft::key(c.get_count());
+            let key = LandNft::key(c.get_index());
             add_land_nft_by_key(key, deps, _env, owner , size, addr, total_lands, price) 
 
         },
@@ -64,6 +64,22 @@ pub fn add_land_nft_royalty(deps: DepsMut,  _env : Env, _key : String ,mut royal
     Ok(Response::new().add_attribute("method", "add_royalty"))
 }
 
+pub fn remove_land_nft_royalty(deps: DepsMut,  _env : Env, _key : String ,
+    creator_wallet : Addr ) -> Result<Response, ContractError> {
+   
+    let stored_land = LAND_NFTS.key(_key.as_str());
+    
+    let mut land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
+
+    let date_updated = _env.block.time;
+   
+    land_nft.remove_royalty(creator_wallet, date_updated);
+
+    LAND_NFTS.save(deps.storage, _key.as_str(), &land_nft)?;
+
+    Ok(Response::new().add_attribute("method", "remove_royalty"))
+}
+
 
 
 
@@ -71,7 +87,8 @@ pub fn add_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,mut me
    
     let stored_land = LAND_NFTS.key(_key.as_str());
     
-    let mut land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
+    let mut land_nft = stored_land.may_load(deps.storage)
+    .expect("Failed to find land nft").expect("x.!.Failed to unwrap!!");
 
     let date_updated = _env.block.time;
     media_type.date_updated = Some(date_updated);
@@ -81,4 +98,20 @@ pub fn add_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,mut me
     LAND_NFTS.save(deps.storage, _key.as_str(), &land_nft)?;
 
     Ok(Response::new().add_attribute("method", "add_media_type"))
+}
+
+pub fn remove_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,
+    url : String ) -> Result<Response, ContractError> {
+   
+    let stored_land = LAND_NFTS.key(_key.as_str());
+    
+    let mut land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
+
+    let date_updated = _env.block.time;
+   
+    land_nft.remove_media_type(url, date_updated);
+    
+    LAND_NFTS.save(deps.storage, _key.as_str(), &land_nft)?;
+
+    Ok(Response::new().add_attribute("method", "remove_media_type"))
 }

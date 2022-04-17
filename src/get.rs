@@ -1,7 +1,16 @@
-use crate::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse, LandNftsResponse};
+use crate::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse, LandNftsResponse, LandNftResponse};
 use cosmwasm_std::{Deps, Env, StdResult, Order};
 use crate::state::{LAND_NFTS, LandNftMediaType, LandNftRoyalty, LandNft};
 use cw_storage_plus::Bound;
+
+pub fn get_land_nft(deps: Deps,  _env : Env, _key : String ) -> StdResult<LandNftResponse>{
+
+    let stored_land = LAND_NFTS.key(_key.as_str());
+    
+    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
+    
+    Ok (LandNftResponse { land_nft : land_nft })
+}
 
 pub fn get_all_land_nft_royalties (deps: Deps,  _env : Env, _key : String ) -> StdResult<LandNftRoyaltiesResponse>{
 
