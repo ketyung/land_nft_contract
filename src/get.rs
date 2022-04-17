@@ -101,10 +101,11 @@ pub fn get_all_land_nfts(deps : Deps , start_after: Option<String>, limit: Optio
             addr : v.addr,
             total_lands : v.total_lands, 
             price : v.price, 
+            price_denom : v.price_denom, 
+            status : v.status, 
             media_types : v.media_types,
             royalties : v.royalties,
             other_attributes : v.other_attributes, 
-            price_denom : v.price_denom, 
             date_created : v.date_created,
             date_updated : v.date_updated, 
         })

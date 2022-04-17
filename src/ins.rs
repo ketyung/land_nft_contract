@@ -82,13 +82,51 @@ fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,
 
     let date_created = _env.block.time;
 
-    let new_land = LandNft::new ( owner ,total_size, each_size, size_unit,
+    let mut new_land = LandNft::new ( owner ,total_size, each_size, size_unit,
     addr, total_lands, price, price_denom, date_created );
+
+    new_land.key = Some(_key.clone());
 
     LAND_NFTS.save(deps.storage, _key.as_str(), &new_land)?;
 
     Ok(Response::new().add_attribute("key", _key).add_attribute("method", "add_land_nft"))
 }
+
+pub fn update_land_nft(
+    deps: DepsMut,  _env : Env,  
+    info: MessageInfo,
+    for_key : String , 
+    total_size : u64, 
+    each_size : u64,
+    size_unit : Option<String>,
+    addr : String, 
+    total_lands : u16, 
+    price : u64,
+    price_denom : Option<String>) -> Result<Response, ContractError> {
+   
+    let owner = info.clone().sender;
+
+    let stored_land = LAND_NFTS.key(for_key.as_str());
+    
+    let _stored_land_nft = stored_land.may_load(deps.storage)?;
+   
+    if _stored_land_nft.is_none() {
+
+        return Err(ContractError::InvalidLandNft{});
+    }
+
+    let date_updated = _env.block.time;
+
+    let mut new_land = LandNft::new ( owner ,total_size, each_size, size_unit,
+    addr, total_lands, price, price_denom, date_updated );
+
+    new_land.key = Some(for_key.clone());
+
+    LAND_NFTS.save(deps.storage, for_key.as_str(), &new_land)?;
+
+    Ok(Response::new().add_attribute("key", for_key).add_attribute("method", "update_land_nft"))
+}
+
 
 
 

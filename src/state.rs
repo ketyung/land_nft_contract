@@ -93,6 +93,11 @@ pub const LAND_NFT_KEY_PREFIX : &str = "land_nft";
 
 pub const LAND_NFTS : Map<&str, LandNft> = Map::new("land_nfts");
 
+pub const LAND_NFT_STATUS_MINTED : u8 = 1;
+
+pub const LAND_NFT_STATUS_TRANSFERRED : u8 = 2;
+
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct LandNft {
 
@@ -113,6 +118,8 @@ pub struct LandNft {
     pub price : u64, 
 
     pub price_denom : Option<String>,
+
+    pub status : Option<u8>,
 
     pub (crate) media_types : Option<Vec<LandNftMediaType>>,
 
@@ -146,7 +153,7 @@ impl LandNft {
             owner : owner, total_size : total_size,
             each_size : Some(each_size), size_unit : size_unit,  
             addr: Some(addr), total_lands : total_lands, price : price, 
-            price_denom: pdenom,
+            price_denom: pdenom, status : None, 
             media_types : None, royalties : None, other_attributes : None, 
             date_created : date_created, date_updated : date_created  };
         

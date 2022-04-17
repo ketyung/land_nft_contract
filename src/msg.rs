@@ -19,6 +19,17 @@ pub enum ExecuteMsg {
         price_denom : Option<String>
     },
 
+    UpdateLandNft { 
+        for_key : String, 
+        total_size : u64, 
+        each_size : u64,
+        size_unit : Option<String>,
+        addr : String, 
+        total_lands : u16, 
+        price : u64,
+        price_denom : Option<String>
+    },
+
     AddLandNftMediaType {
         for_key : String, 
         url : String,
@@ -34,7 +45,7 @@ pub enum ExecuteMsg {
     },
 
     RemoveLandNftMediaType {
-        
+
         for_key : String, 
         url : String,
     },

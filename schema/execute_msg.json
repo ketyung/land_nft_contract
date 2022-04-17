@@ -61,6 +61,66 @@
     {
       "type": "object",
       "required": [
+        "update_land_nft"
+      ],
+      "properties": {
+        "update_land_nft": {
+          "type": "object",
+          "required": [
+            "addr",
+            "each_size",
+            "for_key",
+            "price",
+            "total_lands",
+            "total_size"
+          ],
+          "properties": {
+            "addr": {
+              "type": "string"
+            },
+            "each_size": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "for_key": {
+              "type": "string"
+            },
+            "price": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "price_denom": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "size_unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "total_lands": {
+              "type": "integer",
+              "format": "uint16",
+              "minimum": 0.0
+            },
+            "total_size": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
         "add_land_nft_media_type"
       ],
       "properties": {
@@ -122,6 +182,54 @@
               "type": "integer",
               "format": "uint16",
               "minimum": 0.0
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "remove_land_nft_media_type"
+      ],
+      "properties": {
+        "remove_land_nft_media_type": {
+          "type": "object",
+          "required": [
+            "for_key",
+            "url"
+          ],
+          "properties": {
+            "for_key": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "remove_land_nft_royalty"
+      ],
+      "properties": {
+        "remove_land_nft_royalty": {
+          "type": "object",
+          "required": [
+            "creator_wallet",
+            "for_key"
+          ],
+          "properties": {
+            "creator_wallet": {
+              "$ref": "#/definitions/Addr"
+            },
+            "for_key": {
+              "type": "string"
             }
           }
         }
