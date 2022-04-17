@@ -6,7 +6,8 @@ use cw2::set_contract_version;
 use crate::error::ContractError;
 use crate::msg::{ ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{LandNftMediaType, LandNftRoyalty};
-use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty};
+use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty, 
+    remove_land_nft_royalty, remove_land_nft_media_type};
 use crate::get::{get_all_land_nfts, get_land_nft_media_types, get_land_nft_royalties};
 
 // version info for migration info
@@ -67,6 +68,17 @@ pub fn execute(
             add_land_nft_royalty(deps, _env, info, for_key, royalty)
 
         },
+
+        ExecuteMsg::RemoveLandNftMediaType{
+            for_key,
+            url
+        }=> remove_land_nft_media_type(deps, _env, info, for_key, url),
+
+        ExecuteMsg::RemoveLandNftRoyalty {
+            for_key,
+            creator_wallet,
+        } => remove_land_nft_royalty(deps, _env, info,for_key, creator_wallet),
+
     }
 }
 

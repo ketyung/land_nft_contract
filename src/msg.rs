@@ -33,6 +33,17 @@ pub enum ExecuteMsg {
         royalty : u16,
     },
 
+    RemoveLandNftMediaType {
+        
+        for_key : String, 
+        url : String,
+    },
+
+    RemoveLandNftRoyalty {
+        for_key : String, 
+        creator_wallet : Addr,
+    },
+
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
