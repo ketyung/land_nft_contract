@@ -64,7 +64,8 @@ pub fn add_land_nft(deps: DepsMut,  _env : Env,
     }
 
 }
-pub fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,  
+
+fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,  
     owner : Addr, 
     total_size : u64, 
     each_size : u64,

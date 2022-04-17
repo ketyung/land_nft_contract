@@ -11,7 +11,7 @@ pub struct InstantiateMsg {
 pub enum ExecuteMsg {
     Increment {},
     Reset { count: i32 },
-    
+
     AddLandNft { total_size : u64, 
         each_size : u64,
         size_unit : Option<String>,
@@ -19,7 +19,14 @@ pub enum ExecuteMsg {
         total_lands : u16, 
         price : u64,
         price_denom : Option<String>
-    }
+    },
+
+    AddLandNftMediaType {
+        for_key : String, 
+        url : String,
+        media_type : u8,
+        is_default : bool,
+    },
 
 }
 
