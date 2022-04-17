@@ -52,7 +52,7 @@ pub fn get_all_land_nft_media_types (deps: Deps,  _env : Env, _key : String ) ->
 }
 
 
-pub fn get_land_nft_media_types (deps: Deps,  _env : Env, _key : String, media_type : u8 ) -> StdResult<LandNftMediaTypesResponse>{
+pub fn get_land_nft_media_types (deps: Deps,  _key : String, media_type : u8 ) -> StdResult<LandNftMediaTypesResponse>{
 
     let stored_land = LAND_NFTS.key(_key.as_str());
     

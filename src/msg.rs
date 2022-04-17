@@ -42,9 +42,14 @@ pub enum QueryMsg {
     GetCount {},
 
     GetAllLandNfts { 
-        start_after : Option<String>
-        ,limit: Option<u32>},
-    
+        start_after : Option<String>,
+        limit: Option<u32>
+    },
+  
+    GetLandNftMediaTypes {
+        for_key : String,
+        media_type : u8,
+    },
 }
 
 // We define a custom struct for each query response

@@ -7,7 +7,7 @@ use crate::error::ContractError;
 use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{State, STATE, LandNftMediaType, LandNftRoyalty};
 use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty};
-use crate::get::{get_all_land_nfts};
+use crate::get::{get_all_land_nfts, get_land_nft_media_types};
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:counter";
@@ -83,6 +83,10 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
 
         QueryMsg::GetAllLandNfts { start_after, limit } =>
         to_binary(&get_all_land_nfts(deps, start_after, limit)?),
+
+        QueryMsg::GetLandNftMediaTypes { for_key, media_type} =>
+        to_binary(&get_land_nft_media_types(deps, for_key, media_type )?)
+        ,
     }
 }
 

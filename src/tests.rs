@@ -87,7 +87,7 @@ mod tests {
         println!("\n\nget.all.land.nft.media.types:: {:?}", res);
 
 
-        let res = get_land_nft_media_types(deps.as_ref(), mock_env(), key.clone(), MEDIA_TYPE_IMAGE);
+        let res = get_land_nft_media_types(deps.as_ref(),key.clone(), MEDIA_TYPE_IMAGE);
 
         println!("\n\nget.image.land.nft.media.types:: {:?}", res);
 
