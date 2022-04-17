@@ -121,11 +121,11 @@ pub struct LandNft {
 
     pub price_denom : Option<String>,
 
-    media_types : Option<Vec<LandNftMediaType>>,
+    pub (crate) media_types : Option<Vec<LandNftMediaType>>,
 
-    royalties : Option<Vec<LandNftRoyalty>>,
+    pub (crate) royalties : Option<Vec<LandNftRoyalty>>,
 
-    other_attributes : Option<Vec<Attribute>>,
+    pub (crate) other_attributes : Option<Vec<Attribute>>,
 
     pub date_created : Timestamp,
 

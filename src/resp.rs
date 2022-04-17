@@ -20,5 +20,5 @@ pub struct LandNftRoyaltiesResponse {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct LandNftsResponse {
 
-    pub royalties : Vec<LandNft>,
+    pub land_nfts : Vec<LandNft>,
 }
