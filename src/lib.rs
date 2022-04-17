@@ -3,7 +3,7 @@ mod error;
 pub mod msg;
 pub mod state;
 pub mod ins;
-mod resp;
+pub mod resp;
 mod tests;
 pub mod get;
 

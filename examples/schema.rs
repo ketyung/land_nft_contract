@@ -3,8 +3,9 @@ use std::fs::create_dir_all;
 
 use cosmwasm_schema::{export_schema, remove_schemas, schema_for};
 
-use land_nft_contract::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
+use land_nft_contract::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use land_nft_contract::state::{LandNft, LandNftMediaType, LandNftRoyalty,Attribute};
+use land_nft_contract::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse, LandNftResponse, LandNftsResponse};
 
 fn main() {
     let mut out_dir = current_dir().unwrap();
@@ -19,5 +20,9 @@ fn main() {
     export_schema(&schema_for!(LandNftMediaType), &out_dir);
     export_schema(&schema_for!(LandNftRoyalty), &out_dir);
     export_schema(&schema_for!(Attribute), &out_dir);
-    export_schema(&schema_for!(CountResponse), &out_dir);
+    export_schema(&schema_for!(LandNftResponse), &out_dir);
+    export_schema(&schema_for!(LandNftsResponse), &out_dir);
+    export_schema(&schema_for!(LandNftRoyaltiesResponse), &out_dir);
+    export_schema(&schema_for!(LandNftMediaTypesResponse), &out_dir);
+    
 }
