@@ -55,7 +55,7 @@ mod tests {
         let info = mock_info("terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", &coins(2, "token"));
        
 
-        let res = add_land_nft(deps.as_mut(),mock_env(), info, 
+        let res = add_land_nft(deps.as_mut(),mock_env(), info.clone(), 
         12560, "Tmn Sinar Bak Bak, Lot 90".to_string(), 
         12, 2310);
 
@@ -76,7 +76,8 @@ mod tests {
        
         for n in 1..4 {
 
-            let res = add_land_nft_media_type(deps.as_mut(), mock_env(), key.clone(), LandNftMediaType{
+            let res = add_land_nft_media_type(deps.as_mut(), mock_env(), info.clone(), 
+                key.clone(), LandNftMediaType{
                 url : format!( "https://youtube.be/772hxxh_{}", n * 1000),
                 media_type : MEDIA_TYPE_VIDEO,
                 is_default : false, 
@@ -89,7 +90,9 @@ mod tests {
 
         for n in 1..3 {
 
-            let _ = add_land_nft_media_type(deps.as_mut(), mock_env(), key.clone(), LandNftMediaType{
+            let _ = add_land_nft_media_type(deps.as_mut(), mock_env(), 
+                info.clone(),
+                key.clone(), LandNftMediaType{
                 url : format!( "https://imgurl.ii/ImgX_{}", n * 1000),
                 is_default : false, 
                 media_type : MEDIA_TYPE_IMAGE,
@@ -109,7 +112,8 @@ mod tests {
 
         for n in 1..2 {
 
-            let _ = add_land_nft_royalty(deps.as_mut(), mock_env(), key.clone(), LandNftRoyalty{
+            let _ = add_land_nft_royalty(deps.as_mut(), mock_env(), info.clone(),
+            key.clone(), LandNftRoyalty{
                
                 creator_wallet : Addr::unchecked("terra1qchccaxyrzk8a4yxu6y2vwzc48jak8qmqm9qtg"),
                 index : (n -1),

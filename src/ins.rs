@@ -10,8 +10,6 @@ const ALLOWED_ADMINS : [&'static str; 3] = ["terra1ek2jqqyyzm8ywwp8qwp6phmsaclq3
 fn is_allowed_admin( info: MessageInfo ) -> bool{
 
     let admin = info.sender.clone();
-
-   
     let mut allowed : bool = false ;
 
     let admins = ALLOWED_ADMINS.clone();
@@ -77,7 +75,18 @@ pub fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,  owner : 
 
 
 
-pub fn add_land_nft_royalty(deps: DepsMut,  _env : Env, _key : String ,mut royalty :LandNftRoyalty) -> Result<Response, ContractError> {
+pub fn add_land_nft_royalty(deps: DepsMut,  
+    _env : Env, 
+    info: MessageInfo,
+    _key : String ,
+    mut royalty :LandNftRoyalty) -> Result<Response, ContractError> {
+   
+
+    if !is_allowed_admin(info.clone()) {
+
+        return Err(ContractError::Unauthorized {});
+    }    
+
    
     let stored_land = LAND_NFTS.key(_key.as_str());
     
@@ -93,9 +102,16 @@ pub fn add_land_nft_royalty(deps: DepsMut,  _env : Env, _key : String ,mut royal
     Ok(Response::new().add_attribute("method", "add_royalty"))
 }
 
-pub fn remove_land_nft_royalty(deps: DepsMut,  _env : Env, _key : String ,
+pub fn remove_land_nft_royalty(deps: DepsMut,  _env : Env, 
+    info: MessageInfo,
+    _key : String ,
     creator_wallet : Addr ) -> Result<Response, ContractError> {
    
+    if !is_allowed_admin(info.clone()) {
+
+        return Err(ContractError::Unauthorized {});
+    }    
+    
     let stored_land = LAND_NFTS.key(_key.as_str());
     
     let mut land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
@@ -112,8 +128,16 @@ pub fn remove_land_nft_royalty(deps: DepsMut,  _env : Env, _key : String ,
 
 
 
-pub fn add_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,mut media_type : LandNftMediaType) -> Result<Response, ContractError> {
+pub fn add_land_nft_media_type(deps: DepsMut,  _env : Env, 
+    info: MessageInfo,
+    _key : String ,
+    mut media_type : LandNftMediaType) -> Result<Response, ContractError> {
    
+    if !is_allowed_admin(info.clone()) {
+
+        return Err(ContractError::Unauthorized {});
+    }    
+    
     let stored_land = LAND_NFTS.key(_key.as_str());
     
     let mut land_nft = stored_land.may_load(deps.storage)
@@ -129,9 +153,16 @@ pub fn add_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,mut me
     Ok(Response::new().add_attribute("method", "add_media_type"))
 }
 
-pub fn remove_land_nft_media_type(deps: DepsMut,  _env : Env, _key : String ,
+pub fn remove_land_nft_media_type(deps: DepsMut,  _env : Env,
+    info: MessageInfo,
+    _key : String ,
     url : String ) -> Result<Response, ContractError> {
    
+    if !is_allowed_admin(info.clone()) {
+
+        return Err(ContractError::Unauthorized {});
+    }    
+    
     let stored_land = LAND_NFTS.key(_key.as_str());
     
     let mut land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
