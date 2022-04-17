@@ -5,11 +5,55 @@
     {
       "type": "object",
       "required": [
-        "increment"
+        "add_land_nft"
       ],
       "properties": {
-        "increment": {
-          "type": "object"
+        "add_land_nft": {
+          "type": "object",
+          "required": [
+            "addr",
+            "each_size",
+            "price",
+            "total_lands",
+            "total_size"
+          ],
+          "properties": {
+            "addr": {
+              "type": "string"
+            },
+            "each_size": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "price": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            },
+            "price_denom": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "size_unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "total_lands": {
+              "type": "integer",
+              "format": "uint16",
+              "minimum": 0.0
+            },
+            "total_size": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            }
+          }
         }
       },
       "additionalProperties": false
@@ -17,23 +61,78 @@
     {
       "type": "object",
       "required": [
-        "reset"
+        "add_land_nft_media_type"
       ],
       "properties": {
-        "reset": {
+        "add_land_nft_media_type": {
           "type": "object",
           "required": [
-            "count"
+            "for_key",
+            "is_default",
+            "media_type",
+            "url"
           ],
           "properties": {
-            "count": {
+            "for_key": {
+              "type": "string"
+            },
+            "is_default": {
+              "type": "boolean"
+            },
+            "media_type": {
               "type": "integer",
-              "format": "int32"
+              "format": "uint8",
+              "minimum": 0.0
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "add_land_nft_royalty"
+      ],
+      "properties": {
+        "add_land_nft_royalty": {
+          "type": "object",
+          "required": [
+            "creator_wallet",
+            "for_key",
+            "index",
+            "royalty"
+          ],
+          "properties": {
+            "creator_wallet": {
+              "$ref": "#/definitions/Addr"
+            },
+            "for_key": {
+              "type": "string"
+            },
+            "index": {
+              "type": "integer",
+              "format": "uint8",
+              "minimum": 0.0
+            },
+            "royalty": {
+              "type": "integer",
+              "format": "uint16",
+              "minimum": 0.0
             }
           }
         }
       },
       "additionalProperties": false
     }
-  ]
+  ],
+  "definitions": {
+    "Addr": {
+      "description": "A human readable address.\n\nIn Cosmos, this is typically bech32 encoded. But for multi-chain smart contracts no assumptions should be made other than being UTF-8 encoded and of reasonable length.\n\nThis type represents a validated address. It can be created in the following ways 1. Use `Addr::unchecked(input)` 2. Use `let checked: Addr = deps.api.addr_validate(input)?` 3. Use `let checked: Addr = deps.api.addr_humanize(canonical_addr)?` 4. Deserialize from JSON. This must only be done from JSON that was validated before such as a contract's state. `Addr` must not be used in messages sent by the user because this would result in unvalidated instances.\n\nThis type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.",
+      "type": "string"
+    }
+  }
 }

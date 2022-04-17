@@ -7,6 +7,7 @@ use crate::error::ContractError;
 use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{State, STATE, LandNftMediaType, LandNftRoyalty};
 use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty};
+use crate::get::{get_all_land_nfts};
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:counter";
@@ -40,11 +41,9 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::Increment {} => try_increment(deps),
-        ExecuteMsg::Reset { count } => try_reset(deps, info, count),
+       
         ExecuteMsg::AddLandNft {
-            total_size, each_size, size_unit, 
-            addr, total_lands, price, price_denom
+            total_size, each_size, size_unit, addr, total_lands, price, price_denom
         }=> add_land_nft(deps, _env, info, total_size, each_size, size_unit, 
             addr, total_lands, price, price_denom),
 
@@ -71,34 +70,19 @@ pub fn execute(
             let royalty = LandNftRoyalty{ creator_wallet : creator_wallet, index : index, 
                 royalty : royalty, date_updated : Some(_env.block.time)};
             add_land_nft_royalty(deps, _env, info, for_key, royalty)
-            
+
         },
     }
 }
 
-pub fn try_increment(deps: DepsMut) -> Result<Response, ContractError> {
-    STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
-        state.count += 1;
-        Ok(state)
-    })?;
-
-    Ok(Response::new().add_attribute("method", "try_increment"))
-}
-pub fn try_reset(deps: DepsMut, info: MessageInfo, count: i32) -> Result<Response, ContractError> {
-    STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
-        if info.sender != state.owner {
-            return Err(ContractError::Unauthorized {});
-        }
-        state.count = count;
-        Ok(state)
-    })?;
-    Ok(Response::new().add_attribute("method", "reset"))
-}
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetCount {} => to_binary(&query_count(deps)?),
+
+        QueryMsg::GetAllLandNfts { start_after, limit } =>
+        to_binary(&get_all_land_nfts(deps, start_after, limit)?),
     }
 }
 

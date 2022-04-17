@@ -9,9 +9,7 @@ pub struct InstantiateMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
-    Increment {},
-    Reset { count: i32 },
-
+  
     AddLandNft { total_size : u64, 
         each_size : u64,
         size_unit : Option<String>,
@@ -42,6 +40,11 @@ pub enum ExecuteMsg {
 pub enum QueryMsg {
     // GetCount returns the current count as a json-encoded number
     GetCount {},
+
+    GetAllLandNfts { 
+        start_after : Option<String>
+        ,limit: Option<u32>},
+    
 }
 
 // We define a custom struct for each query response
