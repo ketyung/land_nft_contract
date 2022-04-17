@@ -1,12 +1,41 @@
-use cosmwasm_std::{DepsMut, Env, Response, Addr,};
+use cosmwasm_std::{DepsMut, Env, Response, Addr, MessageInfo};
 use crate::error::ContractError;
 use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty, LAND_NFT_COUNTER, IndexCounter};
 
 
+const ALLOWED_ADMINS : [&'static str; 3] = ["terra1ek2jqqyyzm8ywwp8qwp6phmsaclq3uryg48vf9",
+"terra1c4kq5cft2df40q3tr9y0uum6cpksjf0f4y7zz0", "terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3"];
+
+
+fn is_allowed_admin( info: MessageInfo ) -> bool{
+
+    let admin = info.sender.clone();
+
+   
+    let mut allowed : bool = false ;
+
+    let admins = ALLOWED_ADMINS.clone();
+
+    admins.iter().for_each( |a| { 
+        if *a == admin.to_string() {
+            allowed = true ; 
+        }
+    });
+
+    allowed
+}
+
 pub fn add_land_nft(deps: DepsMut,  _env : Env, 
-    owner : Addr, size : u64, addr : String, 
+    info: MessageInfo, size : u64, addr : String, 
     total_lands : u16, price : u64) -> Result<Response, ContractError> {
    
+    if !is_allowed_admin(info.clone()) {
+
+        return Err(ContractError::Unauthorized {});
+    }    
+
+    let owner = info.clone().sender;
+
     let counter = LAND_NFT_COUNTER.update(deps.storage, |mut counter| -> Result<_, ContractError> {
         counter.increment();
         Ok(counter)

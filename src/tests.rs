@@ -52,11 +52,11 @@ mod tests {
     fn test_add_land_nfts(){
 
         let mut deps = mock_dependencies(&coins(2, "token"));
-        let info = mock_info("terra1qchccaxyrzk8a4yxu6y2vwzc48jak8qmqm9qtg", &coins(2, "token"));
-        let owner = info.sender.clone();
+        let info = mock_info("terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", &coins(2, "token"));
+       
 
-        let res = add_land_nft(deps.as_mut(),mock_env(), 
-        owner, 12560, "Tmn Sinar Bak Bak, Lot 90".to_string(), 
+        let res = add_land_nft(deps.as_mut(),mock_env(), info, 
+        12560, "Tmn Sinar Bak Bak, Lot 90".to_string(), 
         12, 2310);
 
 
