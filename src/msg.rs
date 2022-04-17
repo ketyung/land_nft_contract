@@ -11,6 +11,16 @@ pub struct InstantiateMsg {
 pub enum ExecuteMsg {
     Increment {},
     Reset { count: i32 },
+    
+    AddLandNft { total_size : u64, 
+        each_size : u64,
+        size_unit : Option<String>,
+        addr : String, 
+        total_lands : u16, 
+        price : u64,
+        price_denom : Option<String>
+    }
+
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

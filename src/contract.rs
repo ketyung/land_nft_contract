@@ -6,6 +6,7 @@ use cw2::set_contract_version;
 use crate::error::ContractError;
 use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{State, STATE};
+use crate::ins::{add_land_nft};
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:counter";
@@ -41,6 +42,11 @@ pub fn execute(
     match msg {
         ExecuteMsg::Increment {} => try_increment(deps),
         ExecuteMsg::Reset { count } => try_reset(deps, info, count),
+        ExecuteMsg::AddLandNft {
+            total_size, each_size, size_unit, 
+            addr, total_lands, price, price_denom
+        }=> add_land_nft(deps, _env, info, total_size, each_size, size_unit, 
+            addr, total_lands, price, price_denom),
     }
 }
 

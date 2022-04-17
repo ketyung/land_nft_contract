@@ -56,8 +56,8 @@ mod tests {
        
 
         let res = add_land_nft(deps.as_mut(),mock_env(), info.clone(), 
-        12560, "Tmn Sinar Bak Bak, Lot 90".to_string(), 
-        12, 2310);
+        12560, 50, None,  "Tmn Sinar Bak Bak, Lot 90".to_string(), 
+        12, 2310, None );
 
 
         let itr = res.unwrap().attributes.into_iter();

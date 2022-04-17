@@ -24,8 +24,15 @@ fn is_allowed_admin( info: MessageInfo ) -> bool{
 }
 
 pub fn add_land_nft(deps: DepsMut,  _env : Env, 
-    info: MessageInfo, size : u64, addr : String, 
-    total_lands : u16, price : u64) -> Result<Response, ContractError> {
+    info: MessageInfo,
+    total_size : u64, 
+    each_size : u64,
+    size_unit : Option<String>,
+    addr : String, 
+    total_lands : u16, 
+    price : u64,
+    price_denom : Option<String>
+    ) -> Result<Response, ContractError> {
    
     if !is_allowed_admin(info.clone()) {
 
@@ -42,21 +49,30 @@ pub fn add_land_nft(deps: DepsMut,  _env : Env,
     match counter {
 
         Ok(c) => add_land_nft_by_key(LandNft::key(c.get_index()), 
-        deps, _env, owner, size, addr, total_lands, price) ,
+        deps, _env, owner, total_size, each_size, size_unit, 
+        addr, total_lands, price, price_denom) ,
 
         Err(_) => {
             
             let c = IndexCounter::new();
             let _ = LAND_NFT_COUNTER.save(deps.storage, &c);
             let key = LandNft::key(c.get_index());
-            add_land_nft_by_key(key, deps, _env, owner , size, addr, total_lands, price) 
+            add_land_nft_by_key(key, deps, _env, owner, total_size, each_size, size_unit, 
+                addr, total_lands, price, price_denom) 
 
         },
     }
 
 }
-pub fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,  owner : Addr, 
-    size : u64, addr : String, total_lands : u16, price : u64) -> Result<Response, ContractError> {
+pub fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,  
+    owner : Addr, 
+    total_size : u64, 
+    each_size : u64,
+    size_unit : Option<String>,
+    addr : String, 
+    total_lands : u16, 
+    price : u64,
+    price_denom : Option<String>) -> Result<Response, ContractError> {
    
     let stored_land = LAND_NFTS.key(_key.as_str());
     
@@ -65,8 +81,8 @@ pub fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,  owner : 
 
     let date_created = _env.block.time;
 
-    let new_land = LandNft::new ( owner ,size,
-    addr, total_lands, price, date_created );
+    let new_land = LandNft::new ( owner ,total_size, each_size, size_unit,
+    addr, total_lands, price, price_denom, date_created );
 
     LAND_NFTS.save(deps.storage, _key.as_str(), &new_land)?;
 
