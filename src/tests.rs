@@ -108,6 +108,9 @@ mod tests {
         println!("\n\nget.all.land.nft.royalties:: {:?}", res);
 
 
+        let res  = get_all_land_nfts(deps.as_ref(), Some("key".to_string()), None);
+        println!("\n\nget.all.land.nfts:: {:?}", res);
+
     }
 
 
