@@ -2,7 +2,7 @@
 mod tests {
   
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-    use cosmwasm_std::{coins, from_binary, Addr, Deps};
+    use cosmwasm_std::{coins, from_binary, Addr};
     use crate::msg::*;
     use crate::contract::*;
     use crate::ins::*;
@@ -47,42 +47,33 @@ mod tests {
     }
 
 
-    fn add_land_nft_now(
-    owner : Addr, total_size : u64, 
-    addr : String, total_lands : u16, price : u64) -> Option<String>{
-
-        let mut deps = mock_dependencies(&coins(2, "token"));
-      
-        let res = add_land_nft(deps.as_mut(),mock_env(), 
-        owner, total_size, addr, total_lands, price);
-
-        let itr = res.unwrap().attributes.into_iter();
-        
-        let mut key : Option<String> = None;
-
-        itr.for_each(|i| if i.key == "key" { 
-
-            key = Some(i.value);
-        });
-
-        key 
-    }
-
 
     #[test]
     fn test_add_land_nfts(){
 
+        let mut deps = mock_dependencies(&coins(2, "token"));
         let info = mock_info("terra1qchccaxyrzk8a4yxu6y2vwzc48jak8qmqm9qtg", &coins(2, "token"));
-
         let owner = info.sender.clone();
 
-        let mut deps = mock_dependencies(&coins(2, "token"));
-        
-        let key = add_land_nft_now(owner, 12560, "Tmn Sinar Bak Bak, Lot 90".to_string(), 
-        12, 2310).unwrap_or("unknown.key".to_string());
+        let res = add_land_nft(deps.as_mut(),mock_env(), 
+        owner, 12560, "Tmn Sinar Bak Bak, Lot 90".to_string(), 
+        12, 2310);
 
-        println!("\n\nadded.land.nft:: {}", key);
-        /*
+
+        let itr = res.unwrap().attributes.into_iter();
+        
+        let mut wkey : Option<String> = None;
+
+        itr.for_each(|i| if i.key == "key" { 
+
+            wkey = Some(i.value);
+        });
+
+
+        let key = wkey.unwrap();
+       
+        println!("\n\nadded.land.nft:: {}", key.clone());
+       
         for n in 1..4 {
 
             let res = add_land_nft_media_type(deps.as_mut(), mock_env(), key.clone(), LandNftMediaType{
@@ -130,7 +121,6 @@ mod tests {
         let res  = get_all_land_nft_royalties(deps.as_ref(), mock_env(), key.clone());
         println!("\n\nget.all.land.nft.royalties:: {:?}", res);
 
-        */
 
         let res  = get_all_land_nfts(deps.as_ref(), Some("key".to_string()), None);
         println!("\n\nget.all.land.nfts:: {:?}", res);
