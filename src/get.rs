@@ -61,3 +61,9 @@ pub fn get_land_nft_media_types (deps: Deps,  _env : Env, _key : String, media_t
     Ok (LandNftMediaTypesResponse { media_types : return_media_types})
 
 }
+
+
+pub fn get_all_land_nfts() {
+
+    
+}

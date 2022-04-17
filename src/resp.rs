@@ -1,4 +1,4 @@
-use crate::state::{LandNftMediaType, LandNftRoyalty};
+use crate::state::{LandNftMediaType, LandNftRoyalty, LandNft};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -14,4 +14,11 @@ pub struct LandNftMediaTypesResponse {
 pub struct LandNftRoyaltiesResponse {
 
     pub royalties : Vec<LandNftRoyalty>,
+}
+
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct LandNftsResponse {
+
+    pub royalties : Vec<LandNft>,
 }
