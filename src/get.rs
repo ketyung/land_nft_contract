@@ -12,7 +12,7 @@ pub fn get_land_nft(deps: Deps,  _env : Env, _key : String ) -> StdResult<LandNf
     Ok (LandNftResponse { land_nft : land_nft })
 }
 
-pub fn get_all_land_nft_royalties (deps: Deps,  _env : Env, _key : String ) -> StdResult<LandNftRoyaltiesResponse>{
+pub fn get_land_nft_royalties (deps: Deps, _key : String ) -> StdResult<LandNftRoyaltiesResponse>{
 
     let stored_land = LAND_NFTS.key(_key.as_str());
     

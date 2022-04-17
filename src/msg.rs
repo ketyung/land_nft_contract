@@ -50,6 +50,11 @@ pub enum QueryMsg {
         for_key : String,
         media_type : u8,
     },
+
+    GetLandNftRoyalties {
+
+        for_key : String,      
+    }
 }
 
 // We define a custom struct for each query response

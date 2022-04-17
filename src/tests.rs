@@ -103,7 +103,7 @@ mod tests {
             });
         }
 
-        let res  = get_all_land_nft_royalties(deps.as_ref(), mock_env(), key.clone());
+        let res  = get_land_nft_royalties(deps.as_ref(),key.clone());
         println!("\n\nget.all.land.nft.royalties:: {:?}", res);
 
 
