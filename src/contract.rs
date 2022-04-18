@@ -11,7 +11,7 @@ use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty,
 use crate::get::{get_all_land_nfts, get_land_nft_media_types, get_land_nft_royalties, get_land_nft};
 
 // version info for migration info
-const CONTRACT_NAME: &str = "crates.io:counter";
+pub const CONTRACT_NAME: &str = "crates.io:land_nft_contract";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[cfg_attr(not(feature = "library"), entry_point)]

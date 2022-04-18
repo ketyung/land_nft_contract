@@ -104,6 +104,7 @@ pub fn get_all_land_nfts(deps : Deps , start_after: Option<String>, limit: Optio
             price : v.price, 
             price_denom : v.price_denom, 
             status : v.status, 
+            symbol : v.symbol, 
             media_types : v.media_types,
             royalties : v.royalties,
             other_attributes : v.other_attributes, 

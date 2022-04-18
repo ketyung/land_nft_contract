@@ -1,4 +1,4 @@
-use cosmwasm_std::{DepsMut, Env, Response, Addr, MessageInfo};
+use cosmwasm_std::{DepsMut, Env, Response, Addr, MessageInfo, Empty};
 use crate::error::ContractError;
 use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty, LAND_NFT_COUNTER, IndexCounter};
 
@@ -262,4 +262,73 @@ pub fn remove_land_nft_media_type(deps: DepsMut,  _env : Env,
     LAND_NFTS.save(deps.storage, _key.as_str(), &land_nft)?;
 
     Ok(Response::new().add_attribute("method", "remove_media_type"))
+}
+
+
+pub type Extension = Option<cw721_metadata_onchain::Metadata>;
+
+pub type MyNftMintingContract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty>;
+
+
+pub fn ins_land_nft_for_minting(deps: DepsMut,  _env : Env, 
+    info: MessageInfo, _key : String) -> Result<Response, ContractError> {
+
+    let stored_land = LAND_NFTS.key(_key.as_str());
+
+    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").expect(
+        format!("Failed to unwrap, key not found :\"{}\"", _key).as_str());
+
+    let msg =  cw721_base::InstantiateMsg {
+        name: crate::contract::CONTRACT_NAME.to_string(),
+        symbol: land_nft.symbol,
+        minter: String::from(info.sender.clone()),
+    };
+
+    let res = MyNftMintingContract::default().instantiate(deps, _env.clone(), info.clone(),msg);
+
+    match res {
+
+        Ok(_) => Ok(Response::new().add_attribute("method", "land_nft_instantiated")),
+
+        Err(e) => Err(ContractError::CustomError{error : e}), 
+
+    }
+}
+
+
+pub fn mint_land_nft(deps: DepsMut,  _env : Env, 
+    info: MessageInfo, _key : String) -> Result<Response, ContractError> {
+
+    let stored_land = LAND_NFTS.key(_key.as_str());
+
+    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").expect(
+        format!("Failed to unwrap, key not found :\"{}\"", _key).as_str());
+
+    let key = land_nft.key.expect("Failed to unwrap land nft's key");
+    let msg = cw721_base::msg::MintMsg {
+        token_id: key.clone() ,
+        owner: info.sender.clone().to_string(),
+        token_uri: Some(format!("https://blog.techchee.com/{}", key)),
+        extension: None ,
+    };
+
+    let mint_msg = cw721_base::msg::ExecuteMsg::Mint(msg.clone());
+
+    let res = MyNftMintingContract::default().execute(deps, _env.clone(), info, mint_msg);
+
+
+    match res {
+
+        Ok(_) =>  {
+
+            Ok(Response::new().add_attribute("method", "land_nft_minted"))
+        },
+
+        Err(e) => Err(ContractError::CustomErrorMesg{message : e.to_string()}), 
+
+    }
+
+
+   
+
 }

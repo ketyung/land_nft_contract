@@ -99,6 +99,7 @@ pub const LAND_NFT_STATUS_MINTED : u8 = 1;
 
 pub const LAND_NFT_STATUS_TRANSFERRED : u8 = 2;
 
+pub const DEFAULT_LAND_NFT_SYMBOL : &str = "neworld-land-nft";
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct LandNft {
@@ -122,6 +123,8 @@ pub struct LandNft {
     pub price_denom : Option<String>,
 
     pub status : Option<u8>,
+
+    pub symbol : String, 
 
     pub (crate) media_types : Option<Vec<LandNftMediaType>>,
 
@@ -155,7 +158,7 @@ impl LandNft {
             owner : owner, total_size : total_size,
             each_size : Some(each_size), size_unit : size_unit,  
             addr: Some(addr), total_lands : total_lands, price : price, 
-            price_denom: pdenom, status : None, 
+            price_denom: pdenom, status : None, symbol : DEFAULT_LAND_NFT_SYMBOL.to_string(),
             media_types : None, royalties : None, other_attributes : None, 
             date_created : date_created, date_updated : date_created  };
         
