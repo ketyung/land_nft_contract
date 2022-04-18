@@ -7,6 +7,7 @@
     "date_updated",
     "owner",
     "price",
+    "symbol",
     "total_lands",
     "total_size"
   ],
@@ -22,6 +23,12 @@
     },
     "date_updated": {
       "$ref": "#/definitions/Timestamp"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "each_size": {
       "type": [
@@ -45,6 +52,12 @@
       "items": {
         "$ref": "#/definitions/LandNftMediaType"
       }
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "other_attributes": {
       "type": [
@@ -91,6 +104,9 @@
       ],
       "format": "uint8",
       "minimum": 0.0
+    },
+    "symbol": {
+      "type": "string"
     },
     "total_lands": {
       "type": "integer",

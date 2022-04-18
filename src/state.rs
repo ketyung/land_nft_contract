@@ -243,37 +243,38 @@ impl LandNft{
 
 impl LandNft {
 
-    pub fn default_media_type_of(&self, media_type : u8) -> LandNftMediaType  {
+    pub fn default_media_type_of(&self, media_type : u8) -> Option<LandNftMediaType>  {
 
-        let return_media_types : Vec<LandNftMediaType> = self.media_types.clone().unwrap_or(vec![]);
+        if self.media_types.is_none(){
 
-        let col = return_media_types.into_iter().filter(|m| {    
-            m.media_type == media_type && m.is_default 
-        }).collect::<Vec<LandNftMediaType>>();
+            return None;
+        }
 
-        let m = col.iter().next().expect("Failed to unwrap");
-        
-        return m.clone(); 
-    }
-
-    pub fn default_media_type(&self, media_type : u8) -> Option<LandNftMediaType>  {
-
-        let return_media_types : Vec<LandNftMediaType> = self.media_types.clone().unwrap_or(vec![]);
+        let return_media_types : Vec<LandNftMediaType> = self.media_types.clone().unwrap();
 
         let col = return_media_types.into_iter().filter(|m| {    
             m.media_type == media_type && m.is_default 
         }).collect::<Vec<LandNftMediaType>>();
 
         let m = col.iter().next();
-        
-        if m.is_some(){
-
-            Some(m.unwrap().clone())
+        if m.is_some (){
+            return Some(m.unwrap().clone()); 
         }
         else {
-
-            None 
+            return None;
         }
+        
+    }
+
+    pub fn default_media_type_url(&self, media_type : u8) -> Option<String>  {
+
+        let m = self.default_media_type_of(media_type);
+
+        if m.is_none() {
+            return None;
+        }
+
+        return Some(m.unwrap().url);
 
     }
 }

@@ -177,6 +177,35 @@ mod tests {
     }
 
 
+    #[test]
+    fn test_funcs(){
+
+        let mut nft = LandNft::default(mock_env().block.time);
+        
+        for n in 1..4 {
+
+            let mut is_def = false ;
+
+            if n == 2 {
+                is_def = true ;
+            }
+
+            let m =  LandNftMediaType{
+                url : format!( "https://imgurl.ii/ImgX_{}", n * 1782),
+                is_default : is_def, 
+                media_type : MEDIA_TYPE_IMAGE,
+                date_updated : None, 
+            };
+
+            nft.add_media_type(m, mock_env().block.time);
+        }
+
+        let url = nft.default_media_type_url(MEDIA_TYPE_IMAGE);
+        println!("default.img.url::{}", url.unwrap_or("Failed to unwrap url of default image!!!x".to_string()));
+
+
+    }
+
     macro_rules! show_size {
         (header) => (
             println!("{:<22} {:>4}    {}", "Type", "T", "Option<T>");

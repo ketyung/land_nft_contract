@@ -320,12 +320,17 @@ pub fn mint_land_nft(deps: DepsMut,  _env : Env,
         ext_url_prefix = Some(DEFAULT_EXTERN_URL_PREFIX.to_string());
     }
 
-    let mut _image_url : Option<String> = Some(land_nft.default_media_type_of(crate::state::MEDIA_TYPE_IMAGE).url);
+    let mut _image_url : Option<String> = land_nft.default_media_type_url(crate::state::MEDIA_TYPE_IMAGE);
+    let mut _video_url : Option<String> = land_nft.default_media_type_url(crate::state::MEDIA_TYPE_VIDEO);
+    let mut _anim_url : Option<String> = land_nft.default_media_type_url(crate::state::MEDIA_TYPE_ANIMATION);
+    
     
     let ext = Some(Metadata {
         description: land_nft.description,
         name: land_nft.name ,
         image : _image_url, 
+        youtube_url : _video_url,
+        animation_url : _anim_url, 
         ..Metadata::default()
     });
 

@@ -21,10 +21,22 @@
             "addr": {
               "type": "string"
             },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "each_size": {
               "type": "integer",
               "format": "uint64",
               "minimum": 0.0
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "price": {
               "type": "integer",
@@ -78,6 +90,12 @@
             "addr": {
               "type": "string"
             },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "each_size": {
               "type": "integer",
               "format": "uint64",
@@ -85,6 +103,12 @@
             },
             "for_key": {
               "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "price": {
               "type": "integer",
@@ -112,6 +136,26 @@
               "type": "integer",
               "format": "uint64",
               "minimum": 0.0
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "remove_land_nft"
+      ],
+      "properties": {
+        "remove_land_nft": {
+          "type": "object",
+          "required": [
+            "for_key"
+          ],
+          "properties": {
+            "for_key": {
+              "type": "string"
             }
           }
         }
