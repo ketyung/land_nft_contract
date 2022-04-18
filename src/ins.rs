@@ -104,6 +104,12 @@ pub fn update_land_nft(
     price : u64,
     price_denom : Option<String>) -> Result<Response, ContractError> {
    
+    
+    if !is_allowed_admin(info.clone()) {
+
+        return Err(ContractError::Unauthorized {});
+    }    
+
     let owner = info.clone().sender;
 
     let stored_land = LAND_NFTS.key(for_key.as_str());
@@ -127,6 +133,33 @@ pub fn update_land_nft(
     Ok(Response::new().add_attribute("key", for_key).add_attribute("method", "update_land_nft"))
 }
 
+
+pub fn remove_land_nft ( 
+    deps: DepsMut,  
+    _env : Env,  
+    info: MessageInfo,
+    for_key : String ) -> Result<Response, ContractError>{
+
+    if !is_allowed_admin(info.clone()) {
+
+        return Err(ContractError::Unauthorized {});
+    }   
+    
+    
+    let stored_land = LAND_NFTS.key(for_key.as_str());
+    
+    let _stored_land_nft = stored_land.may_load(deps.storage)?;
+   
+    if _stored_land_nft.is_none() {
+
+        return Err(ContractError::InvalidLandNft{});
+    }
+
+    LAND_NFTS.remove(deps.storage, for_key.as_str());
+
+    Ok(Response::new().add_attribute("method", "remove_land_nft").add_attribute("key", for_key))
+    
+}
 
 
 

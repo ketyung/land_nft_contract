@@ -11,24 +11,7 @@ mod tests {
     use crate::resp::*;
     use std::mem::size_of;
 
-    /*
-    #[test]
-    fn proper_initialization() {
-        let mut deps = mock_dependencies(&[]);
-
-        let msg = InstantiateMsg { count: 17 };
-        let info = mock_info("creator", &coins(1000, "earth"));
-
-        // we can just call .unwrap() to assert this was a success
-        let res = instantiate(deps.as_mut(), mock_env(), info, msg).unwrap();
-        assert_eq!(0, res.messages.len());
-
-        // it worked, let's query the state
-        let res = query(deps.as_ref(), mock_env(), QueryMsg::GetCount {}).unwrap();
-        let value: CountResponse = from_binary(&res).unwrap();
-        assert_eq!(17, value.count);
-    }*/
-
+  
   
     #[test]
     fn test_land_nft(){
@@ -72,11 +55,23 @@ mod tests {
 
         }
 
-        let get_msg = QueryMsg::GetLandNft{ key : key};
+        let get_msg = QueryMsg::GetLandNft{ key : key.clone()};
         let res = query(deps.as_ref(), mock_env(), get_msg).expect("Failed to unwrap res!!!");
 
         let value: LandNftResponse = from_binary(&res).unwrap();
         println!("get.res.value:: {:?}", value);
+
+        let rm_msg = ExecuteMsg::RemoveLandNft{ for_key : key.clone()};
+
+        let res = execute(deps.as_mut(), mock_env(), info, rm_msg);
+        println!("remove::{:?}", res);
+
+
+        println!("\n============= Get Again ===========");
+        let get_msg = QueryMsg::GetLandNft{ key : key.clone()};
+        let res = query(deps.as_ref(), mock_env(), get_msg).expect("Failed to unwrap res!!!");
+        let value: LandNftResponse = from_binary(&res).expect("Failed to unwrap, I think it's been removed, result NOT found!!!x!!");
+        println!("get.again.res.value:: {:?}", value);
 
         
     }

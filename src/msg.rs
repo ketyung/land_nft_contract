@@ -30,6 +30,10 @@ pub enum ExecuteMsg {
         price_denom : Option<String>
     },
 
+    RemoveLandNft { 
+        for_key : String, 
+    },
+
     AddLandNftMediaType {
         for_key : String, 
         url : String,
@@ -79,5 +83,5 @@ pub enum QueryMsg {
     GetLandNft {
         key : String, 
     },
-    
+
 }

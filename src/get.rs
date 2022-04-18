@@ -7,7 +7,8 @@ pub fn get_land_nft(deps: Deps, _key : String ) -> StdResult<LandNftResponse>{
 
     let stored_land = LAND_NFTS.key(_key.as_str());
     
-    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").unwrap();
+    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").expect(
+        format!("Failed to unwrap, key not found :\"{}\"", _key).as_str());
     
     Ok (LandNftResponse { land_nft : land_nft })
 }

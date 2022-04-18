@@ -7,7 +7,7 @@ use crate::error::ContractError;
 use crate::msg::{ ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{LandNftMediaType, LandNftRoyalty};
 use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty, 
-    remove_land_nft_royalty, remove_land_nft_media_type, update_land_nft};
+    remove_land_nft_royalty, remove_land_nft_media_type, update_land_nft, remove_land_nft};
 use crate::get::{get_all_land_nfts, get_land_nft_media_types, get_land_nft_royalties, get_land_nft};
 
 // version info for migration info
@@ -48,6 +48,10 @@ pub fn execute(
         }=> update_land_nft(deps, _env, info, for_key, total_size, each_size, size_unit, 
             addr, total_lands, price, price_denom),
     
+        ExecuteMsg::RemoveLandNft {
+            for_key
+        }=> remove_land_nft(deps, _env, info, for_key),
+
         ExecuteMsg::AddLandNftMediaType{
             for_key,
             url,

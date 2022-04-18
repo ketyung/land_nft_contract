@@ -25,6 +25,8 @@ pub const MEDIA_TYPE_IMAGE : u8 = 1;
 
 pub const MEDIA_TYPE_VIDEO : u8 = 2;
 
+pub const MEDIA_TYPE_ANIMATION : u8 = 3;
+
 #[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
 pub struct LandNftRoyalty {
 
