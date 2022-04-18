@@ -310,7 +310,7 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
     info: MessageInfo, _key : String, _extern_url_prefix : Option <String>) -> Result<Response, ContractError> {
 
     let deps_branch = deps.branch();
-
+    
     let stored_land = LAND_NFTS.key(_key.as_str());
 
     let land_nft = stored_land.may_load(deps_branch.storage).expect("Failed to find land nft").expect(

@@ -72,7 +72,12 @@ pub enum ExecuteMsg {
     MintLandNft {
         for_key : String, 
         external_url_prefix : Option<String>,
-    }
+    },
+
+    InsAndMintLandNft {
+        for_key : String, 
+        external_url_prefix : Option<String>,      
+    },
 
 }
 

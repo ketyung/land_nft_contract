@@ -32,7 +32,7 @@ pub fn instantiate(
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
-    deps: DepsMut,
+    mut deps: DepsMut,
     _env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
@@ -98,6 +98,28 @@ pub fn execute(
             external_url_prefix
         }=> mint_land_nft(deps, _env, info, for_key,external_url_prefix),
     
+        ExecuteMsg::InsAndMintLandNft {
+            for_key,
+            external_url_prefix
+        }=>{
+
+            let deps_branch = deps.branch();
+
+            let res = ins_land_nft_for_minting(deps_branch, _env.clone(), info.clone(), for_key.clone());
+
+            match res {
+
+                Ok(_) =>{
+
+                    mint_land_nft(deps, _env, info, for_key,external_url_prefix)
+                },
+
+                Err(e) =>{
+
+                    return Err(ContractError::CustomErrorMesg{message : e.to_string()});
+                }
+            }
+        },
     }
 }
 
