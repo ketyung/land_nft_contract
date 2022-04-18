@@ -25,6 +25,8 @@ fn is_allowed_admin( info: MessageInfo ) -> bool{
 
 pub fn add_land_nft(deps: DepsMut,  _env : Env, 
     info: MessageInfo,
+    name : Option<String>, 
+    description : Option<String>,
     total_size : u64, 
     each_size : u64,
     size_unit : Option<String>,
@@ -49,7 +51,7 @@ pub fn add_land_nft(deps: DepsMut,  _env : Env,
     match counter {
 
         Ok(c) => add_land_nft_by_key(LandNft::key(c.get_index()), 
-        deps, _env, owner, total_size, each_size, size_unit, 
+        deps, _env, owner, name, description, total_size, each_size, size_unit, 
         addr, total_lands, price, price_denom) ,
 
         Err(_) => {
@@ -57,7 +59,7 @@ pub fn add_land_nft(deps: DepsMut,  _env : Env,
             let c = IndexCounter::new();
             let _ = LAND_NFT_COUNTER.save(deps.storage, &c);
             let key = LandNft::key(c.get_index());
-            add_land_nft_by_key(key, deps, _env, owner, total_size, each_size, size_unit, 
+            add_land_nft_by_key(key, deps, _env, owner, name, description,  total_size, each_size, size_unit, 
                 addr, total_lands, price, price_denom) 
 
         },
@@ -67,6 +69,8 @@ pub fn add_land_nft(deps: DepsMut,  _env : Env,
 
 fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,  
     owner : Addr, 
+    name : Option<String>, 
+    description : Option<String>,
     total_size : u64, 
     each_size : u64,
     size_unit : Option<String>,
@@ -82,10 +86,9 @@ fn add_land_nft_by_key(_key : String , deps: DepsMut,  _env : Env,
 
     let date_created = _env.block.time;
 
-    let mut new_land = LandNft::new ( owner ,total_size, each_size, size_unit,
+    let new_land = LandNft::new (Some(_key.clone()), name, description, 
+    owner ,total_size, each_size, size_unit,
     addr, total_lands, price, price_denom, date_created );
-
-    new_land.key = Some(_key.clone());
 
     LAND_NFTS.save(deps.storage, _key.as_str(), &new_land)?;
 
@@ -96,6 +99,8 @@ pub fn update_land_nft(
     deps: DepsMut,  _env : Env,  
     info: MessageInfo,
     for_key : String , 
+    name : Option<String>, 
+    description : Option<String>,
     total_size : u64, 
     each_size : u64,
     size_unit : Option<String>,
@@ -123,10 +128,11 @@ pub fn update_land_nft(
 
     let date_updated = _env.block.time;
 
-    let mut new_land = LandNft::new ( owner ,total_size, each_size, size_unit,
+    let new_land = LandNft::new ( 
+    Some(for_key.clone()), name, description, 
+    owner ,total_size, each_size, size_unit,
     addr, total_lands, price, price_denom, date_updated );
 
-    new_land.key = Some(for_key.clone());
 
     LAND_NFTS.save(deps.storage, for_key.as_str(), &new_land)?;
 

@@ -39,13 +39,13 @@ pub fn execute(
     match msg {
        
         ExecuteMsg::AddLandNft {
-            total_size, each_size, size_unit, addr, total_lands, price, price_denom
-        }=> add_land_nft(deps, _env, info, total_size, each_size, size_unit, 
+            name, description, total_size, each_size, size_unit, addr, total_lands, price, price_denom
+        }=> add_land_nft(deps, _env, info, name, description,  total_size, each_size, size_unit, 
             addr, total_lands, price, price_denom),
 
         ExecuteMsg::UpdateLandNft {
-            for_key, total_size, each_size, size_unit, addr, total_lands, price, price_denom
-        }=> update_land_nft(deps, _env, info, for_key, total_size, each_size, size_unit, 
+            name, description, for_key, total_size, each_size, size_unit, addr, total_lands, price, price_denom
+        }=> update_land_nft(deps, _env, info, for_key, name, description, total_size, each_size, size_unit, 
             addr, total_lands, price, price_denom),
     
         ExecuteMsg::RemoveLandNft {

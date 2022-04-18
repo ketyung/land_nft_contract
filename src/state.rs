@@ -106,6 +106,10 @@ pub struct LandNft {
 
     pub key : Option<String>,
 
+    pub name : Option<String>,
+
+    pub description : Option<String>, 
+
     pub owner : Addr, 
 
     pub total_size : u64, 
@@ -139,7 +143,11 @@ pub struct LandNft {
 
 impl LandNft {
 
-    pub fn new( owner : Addr, 
+    pub fn new( 
+        key : Option<String>, 
+        name : Option<String>,
+        description : Option<String>,
+        owner : Addr, 
         total_size : u64, 
         each_size : u64,
         size_unit : Option<String>, 
@@ -154,7 +162,10 @@ impl LandNft {
             pdenom =  Some(String::from(DEFAULT_PRICE_DENOM));
         }
 
-        let new_land = LandNft { key : None, 
+        
+        let new_land = LandNft { key :key.clone(), 
+            name : Some(name.unwrap_or(format!("Neworld Land NFT #{}", key.clone().unwrap_or("unknown.key".to_string())))) , 
+            description :  Some(description.unwrap_or(format!("Neworld Land NFT #{}",  key.unwrap_or("unknown.key".to_string())))), 
             owner : owner, total_size : total_size,
             each_size : Some(each_size), size_unit : size_unit,  
             addr: Some(addr), total_lands : total_lands, price : price, 
@@ -169,7 +180,7 @@ impl LandNft {
 
     pub fn default(date_created : Timestamp) -> LandNft{
 
-        Self::new( Addr::unchecked("xxxxx"),  0, 0, None, 
+        Self::new(None,  None, None,  Addr::unchecked("xxxxx"),  0, 0, None, 
         String::from("xxxx"), 0,0, None,  date_created )
     }
 

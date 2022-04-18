@@ -96,6 +96,8 @@ pub fn get_all_land_nfts(deps : Deps , start_after: Option<String>, limit: Optio
         Ok(LandNft {
             key : Some(String::from_utf8(_k)?),
             owner : v.owner,
+            name : v.name, 
+            description : v.description, 
             total_size : v.total_size,
             each_size : v.each_size,
             size_unit : v.size_unit, 

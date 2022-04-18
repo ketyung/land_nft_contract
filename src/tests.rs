@@ -20,7 +20,8 @@ mod tests {
         let info = mock_info("terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", &coins(2, "token"));
        
         let add_mesg = ExecuteMsg::AddLandNft {
-
+            name : None,
+            description : None, 
             total_size : 12500, 
             each_size : 50,
             size_unit : Some("m2".to_string()),
@@ -83,7 +84,7 @@ mod tests {
         let info = mock_info("terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", &coins(2, "token"));
        
 
-        let res = add_land_nft(deps.as_mut(),mock_env(), info.clone(), 
+        let res = add_land_nft(deps.as_mut(),mock_env(), info.clone(), None, None, 
         12560, 50, None,  "Tmn Sinar Bak Bak, Lot 90".to_string(), 
         12, 2310, None );
 

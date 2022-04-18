@@ -10,7 +10,10 @@ pub struct InstantiateMsg {
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
   
-    AddLandNft { total_size : u64, 
+    AddLandNft { 
+        name : Option<String>,
+        description : Option<String>,
+        total_size : u64, 
         each_size : u64,
         size_unit : Option<String>,
         addr : String, 
@@ -21,6 +24,8 @@ pub enum ExecuteMsg {
 
     UpdateLandNft { 
         for_key : String, 
+        name : Option<String>,
+        description : Option<String>,
         total_size : u64, 
         each_size : u64,
         size_unit : Option<String>,
