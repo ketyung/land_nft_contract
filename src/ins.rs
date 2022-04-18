@@ -270,8 +270,9 @@ pub fn remove_land_nft_media_type(deps: DepsMut,  _env : Env,
     Ok(Response::new().add_attribute("method", "remove_media_type"))
 }
 
+pub type Metadata = cw721_metadata_onchain::Metadata;
 
-pub type Extension = Option<cw721_metadata_onchain::Metadata>;
+pub type Extension = Option<Metadata>;
 
 pub type MyNftMintingContract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty>;
 
@@ -301,21 +302,36 @@ pub fn ins_land_nft_for_minting(deps: DepsMut,  _env : Env,
     }
 }
 
+const DEFAULT_EXTERN_URL_PREFIX : &str = "https://neworld.techchee.com/land-nft/";
 
 pub fn mint_land_nft(deps: DepsMut,  _env : Env, 
-    info: MessageInfo, _key : String) -> Result<Response, ContractError> {
+    info: MessageInfo, _key : String, _extern_url_prefix : Option <String>) -> Result<Response, ContractError> {
 
     let stored_land = LAND_NFTS.key(_key.as_str());
 
     let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").expect(
         format!("Failed to unwrap, key not found :\"{}\"", _key).as_str());
 
+    let mut  ext_url_prefix = _extern_url_prefix ;
+
+    if ext_url_prefix.is_none(){
+        ext_url_prefix = Some(DEFAULT_EXTERN_URL_PREFIX.to_string());
+    }
+
+
+    let ext = Some(Metadata {
+        description: land_nft.description,
+        name: land_nft.name ,
+        ..Metadata::default()
+    });
+
     let key = land_nft.key.expect("Failed to unwrap land nft's key");
+
     let msg = cw721_base::msg::MintMsg {
         token_id: key.clone() ,
         owner: info.sender.clone().to_string(),
-        token_uri: Some(format!("https://blog.techchee.com/{}", key)),
-        extension: None ,
+        token_uri: Some(format!("{}/{}", ext_url_prefix.unwrap(), key)),
+        extension: ext ,
     };
 
     let mint_msg = cw721_base::msg::ExecuteMsg::Mint(msg.clone());
