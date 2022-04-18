@@ -254,6 +254,26 @@ impl LandNft {
         let m = col.iter().next().expect("Failed to unwrap");
         
         return m.clone(); 
+    }
+
+    pub fn default_media_type(&self, media_type : u8) -> Option<LandNftMediaType>  {
+
+        let return_media_types : Vec<LandNftMediaType> = self.media_types.clone().unwrap_or(vec![]);
+
+        let col = return_media_types.into_iter().filter(|m| {    
+            m.media_type == media_type && m.is_default 
+        }).collect::<Vec<LandNftMediaType>>();
+
+        let m = col.iter().next();
+        
+        if m.is_some(){
+
+            Some(m.unwrap().clone())
+        }
+        else {
+
+            None 
+        }
 
     }
 }

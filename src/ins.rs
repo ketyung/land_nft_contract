@@ -322,7 +322,6 @@ pub fn mint_land_nft(deps: DepsMut,  _env : Env,
 
     let mut _image_url : Option<String> = Some(land_nft.default_media_type_of(crate::state::MEDIA_TYPE_IMAGE).url);
     
-    
     let ext = Some(Metadata {
         description: land_nft.description,
         name: land_nft.name ,
