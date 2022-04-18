@@ -45,17 +45,24 @@ mod tests {
       
         for n in 1..4 {
             
+            let mut is_def = false; 
+
+            if  n == 1 {
+                is_def = true;
+            }
+
             let add_media_msg = ExecuteMsg::AddLandNftMediaType {
                 for_key : key.clone(), 
                 url : format!( "https::/imgurl.yy/imgx_{}",n*2303),
                 media_type : MEDIA_TYPE_IMAGE,
-                is_default : false,
+                is_default : is_def,
             };
 
             let _ = execute(deps.as_mut(), mock_env(), info.clone(), add_media_msg);
 
         }
 
+      
         let get_msg = QueryMsg::GetLandNft{ key : key.clone()};
         let res = query(deps.as_ref(), mock_env(), get_msg).expect("Failed to unwrap res!!!");
 
@@ -104,12 +111,17 @@ mod tests {
         println!("\n\nadded.land.nft:: {}", key.clone());
        
         for n in 1..4 {
+            let mut is_def = false; 
+
+            if  n == 1 {
+                is_def = true;
+            }
 
             let res = add_land_nft_media_type(deps.as_mut(), mock_env(), info.clone(), 
                 key.clone(), LandNftMediaType{
                 url : format!( "https://youtube.be/772hxxh_{}", n * 1000),
                 media_type : MEDIA_TYPE_VIDEO,
-                is_default : false, 
+                is_default : is_def, 
                 date_updated : None, 
             });
     
@@ -129,6 +141,10 @@ mod tests {
             });
         }
 
+        //println!("default.media.type.of.video::{:?}", );
+
+
+      
         
         let res = get_all_land_nft_media_types(deps.as_ref(), mock_env(), key.clone());
 

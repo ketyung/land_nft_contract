@@ -243,6 +243,24 @@ impl LandNft{
 
 impl LandNft {
 
+    pub fn default_media_type_of(&self, media_type : u8) -> LandNftMediaType  {
+
+        let return_media_types : Vec<LandNftMediaType> = self.media_types.clone().unwrap_or(vec![]);
+
+        let col = return_media_types.into_iter().filter(|m| {    
+            m.media_type == media_type && m.is_default 
+        }).collect::<Vec<LandNftMediaType>>();
+
+        let m = col.iter().next().expect("Failed to unwrap");
+        
+        return m.clone(); 
+
+    }
+}
+
+
+impl LandNft {
+
     pub fn add_royalty(&mut self, royalty : LandNftRoyalty, date_updated : Timestamp ){
 
         self.date_updated = date_updated;

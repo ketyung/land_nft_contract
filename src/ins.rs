@@ -270,11 +270,13 @@ pub fn remove_land_nft_media_type(deps: DepsMut,  _env : Env,
     Ok(Response::new().add_attribute("method", "remove_media_type"))
 }
 
-pub type Metadata = cw721_metadata_onchain::Metadata;
 
-pub type Extension = Option<Metadata>;
+// refer to https://docs.opensea.io/docs/metadata-standards
+type Metadata = cw721_metadata_onchain::Metadata;
 
-pub type MyNftMintingContract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty>;
+type Extension = Option<Metadata>;
+
+type MyNftMintingContract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty>;
 
 
 pub fn ins_land_nft_for_minting(deps: DepsMut,  _env : Env, 
@@ -318,10 +320,13 @@ pub fn mint_land_nft(deps: DepsMut,  _env : Env,
         ext_url_prefix = Some(DEFAULT_EXTERN_URL_PREFIX.to_string());
     }
 
-
+    let mut _image_url : Option<String> = Some(land_nft.default_media_type_of(crate::state::MEDIA_TYPE_IMAGE).url);
+    
+    
     let ext = Some(Metadata {
         description: land_nft.description,
         name: land_nft.name ,
+        image : _image_url, 
         ..Metadata::default()
     });
 
