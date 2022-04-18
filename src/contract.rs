@@ -8,7 +8,7 @@ use crate::msg::{ ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{LandNftMediaType, LandNftRoyalty};
 use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty, 
     remove_land_nft_royalty, remove_land_nft_media_type, update_land_nft, 
-    remove_land_nft, mint_land_nft, ins_land_nft_for_minting};
+    remove_land_nft, mint_land_nft, ins_land_nft_for_minting, ins_and_mint_nft};
 use crate::get::{get_all_land_nfts, get_land_nft_media_types, get_land_nft_royalties, get_land_nft};
 
 // version info for migration info
@@ -32,7 +32,7 @@ pub fn instantiate(
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
-    mut deps: DepsMut,
+    deps: DepsMut,
     _env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
@@ -102,23 +102,7 @@ pub fn execute(
             for_key,
             external_url_prefix
         }=>{
-
-            let deps_branch = deps.branch();
-
-            let res = ins_land_nft_for_minting(deps_branch, _env.clone(), info.clone(), for_key.clone());
-
-            match res {
-
-                Ok(_) =>{
-
-                    mint_land_nft(deps, _env, info, for_key,external_url_prefix)
-                },
-
-                Err(e) =>{
-
-                    return Err(ContractError::CustomErrorMesg{message : e.to_string()});
-                }
-            }
+            ins_and_mint_nft(deps, _env, info, for_key, external_url_prefix)
         },
     }
 }

@@ -377,7 +377,25 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
 
     }
 
+}
 
-   
+pub fn ins_and_mint_nft (mut deps: DepsMut,  _env : Env, 
+    info: MessageInfo, for_key : String, _extern_url_prefix : Option <String>)-> Result<Response, ContractError> {
 
+    let deps_branch = deps.branch();
+
+    let res = ins_land_nft_for_minting(deps_branch, _env.clone(), info.clone(), for_key.clone());
+
+    match res {
+
+        Ok(_) =>{
+
+            mint_land_nft(deps, _env, info, for_key, _extern_url_prefix)
+        },
+
+        Err(e) =>{
+
+            return Err(ContractError::CustomErrorMesg{message : e.to_string()});
+        }
+    }
 }

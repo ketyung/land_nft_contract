@@ -74,7 +74,7 @@ mod tests {
             external_url_prefix : None, 
         };
         let res = execute(deps.as_mut(), mock_env(), info.clone(), test_minting_msg);
-        println!("testing.minting.res::{:?}", res);
+        println!("\ntesting.minting.res::{:?}", res);
 
         
         /*
