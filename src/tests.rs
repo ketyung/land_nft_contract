@@ -62,17 +62,27 @@ mod tests {
 
         }
 
-      
         let get_msg = QueryMsg::GetLandNft{ key : key.clone()};
         let res = query(deps.as_ref(), mock_env(), get_msg).expect("Failed to unwrap res!!!");
 
         let value: LandNftResponse = from_binary(&res).unwrap();
         println!("get.res.value:: {:?}", value);
 
+
+        let test_minting_msg = ExecuteMsg::InsAndMintLandNft {
+            for_key : key.clone(),
+            external_url_prefix : None, 
+        };
+        let res = execute(deps.as_mut(), mock_env(), info.clone(), test_minting_msg);
+        println!("testing.minting.res::{:?}", res);
+
+        
+        /*
         let rm_msg = ExecuteMsg::RemoveLandNft{ for_key : key.clone()};
 
         let res = execute(deps.as_mut(), mock_env(), info, rm_msg);
         println!("remove::{:?}", res);
+        */
 
 
         println!("\n============= Get Again ===========");
