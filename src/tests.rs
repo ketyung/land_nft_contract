@@ -2,10 +2,13 @@
 mod tests {
   
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-    use cosmwasm_std::{coins,  Addr};
+    use cosmwasm_std::{coins,  Addr, from_binary};
     use crate::ins::*;
     use crate::state::*;
     use crate::get::*;
+    use crate::msg::*;
+    use crate::contract::*;
+    use crate::resp::*;
     use std::mem::size_of;
 
     /*
@@ -27,6 +30,56 @@ mod tests {
     }*/
 
   
+    #[test]
+    fn test_land_nft(){
+
+        let mut deps = mock_dependencies(&coins(2, "token"));
+        let info = mock_info("terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", &coins(2, "token"));
+       
+        let add_mesg = ExecuteMsg::AddLandNft {
+
+            total_size : 12500, 
+            each_size : 50,
+            size_unit : Some("m2".to_string()),
+            addr : "Tmn Kingfisher 3, Lrg Wisma Keto, H78".to_string(), 
+            total_lands : 250, 
+            price : 35600,
+            price_denom : Some("uusd".to_string()),
+        };
+
+        let res = execute(deps.as_mut(), mock_env(), info.clone(), add_mesg);
+        let itr = res.unwrap().attributes.into_iter();
+        
+        let mut wkey : Option<String> = None;
+
+        itr.for_each(|i| if i.key == "key" { 
+            wkey = Some(i.value);
+        });
+
+
+        let key = wkey.unwrap();
+      
+        for n in 1..4 {
+            
+            let add_media_msg = ExecuteMsg::AddLandNftMediaType {
+                for_key : key.clone(), 
+                url : format!( "https::/imgurl.yy/imgx_{}",n*2303),
+                media_type : MEDIA_TYPE_IMAGE,
+                is_default : false,
+            };
+
+            let _ = execute(deps.as_mut(), mock_env(), info.clone(), add_media_msg);
+
+        }
+
+        let get_msg = QueryMsg::GetLandNft{ key : key};
+        let res = query(deps.as_ref(), mock_env(), get_msg).expect("Failed to unwrap res!!!");
+
+        let value: LandNftResponse = from_binary(&res).unwrap();
+        println!("get.res.value:: {:?}", value);
+
+        
+    }
 
     #[test]
     fn test_add_land_nfts(){

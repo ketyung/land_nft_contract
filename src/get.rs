@@ -3,7 +3,7 @@ use cosmwasm_std::{Deps, Env, StdResult, Order};
 use crate::state::{LAND_NFTS, LandNftMediaType, LandNftRoyalty, LandNft};
 use cw_storage_plus::Bound;
 
-pub fn get_land_nft(deps: Deps,  _env : Env, _key : String ) -> StdResult<LandNftResponse>{
+pub fn get_land_nft(deps: Deps, _key : String ) -> StdResult<LandNftResponse>{
 
     let stored_land = LAND_NFTS.key(_key.as_str());
     

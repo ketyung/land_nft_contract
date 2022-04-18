@@ -74,5 +74,10 @@ pub enum QueryMsg {
     GetLandNftRoyalties {
 
         for_key : String,      
-    }
+    },
+
+    GetLandNft {
+        key : String, 
+    },
+    
 }
