@@ -272,11 +272,11 @@ pub fn remove_land_nft_media_type(deps: DepsMut,  _env : Env,
 
 
 // refer to https://docs.opensea.io/docs/metadata-standards
-type Metadata = cw721_metadata_onchain::Metadata;
+pub type Metadata = cw721_metadata_onchain::Metadata;
 
-type Extension = Option<Metadata>;
+pub type Extension = Option<Metadata>;
 
-type MyNftMintingContract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty>;
+pub type MyNftMintingContract<'a> = cw721_base::Cw721Contract<'a, Extension, Empty>;
 
 
 pub fn ins_land_nft_for_minting(deps: DepsMut,  _env : Env, 

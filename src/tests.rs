@@ -91,6 +91,13 @@ mod tests {
         let value: LandNftResponse = from_binary(&res).expect("Failed to unwrap, I think it's been removed, result NOT found!!!x!!");
         println!("get.again.res.value:: {:?}", value);
 
+
+        // check response type here https://docs.rs/cw721/latest/cw721/
+        let minted_toks_mesg = QueryMsg::AllMintedTokens{ start_after : None, limit : None};
+        let res = query(deps.as_ref(), mock_env(), minted_toks_mesg).expect("Failed to unwrap res!!!");
+        let value : cw721::TokensResponse = from_binary(&res).expect("Failed to unwrap binary!!");
+        println!("\n\nres.all.minted:: {:?}", value);
+
         
     }
 

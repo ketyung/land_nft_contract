@@ -1,5 +1,5 @@
 use crate::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse, LandNftsResponse, LandNftResponse};
-use cosmwasm_std::{Deps, Env, StdResult, Order};
+use cosmwasm_std::{Deps, Env, StdResult, Order, Binary};
 use crate::state::{LAND_NFTS, LandNftMediaType, LandNftRoyalty, LandNft};
 use cw_storage_plus::Bound;
 
@@ -118,4 +118,17 @@ pub fn get_all_land_nfts(deps : Deps , start_after: Option<String>, limit: Optio
     Ok(LandNftsResponse {
         land_nfts: land_nfts?,
     })
+}
+
+
+pub fn get_all_minted_tokens(deps : Deps ,  _env : Env,
+    start_after: Option<String>, limit: Option<u32>) -> StdResult<Binary>{
+
+
+    let all_tokens_msg = cw721_base::msg::QueryMsg::AllTokens {
+        start_after : start_after,
+        limit : limit,
+    };
+
+    crate::ins::MyNftMintingContract::default().query(deps, _env, all_tokens_msg )
 }
