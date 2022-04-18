@@ -306,13 +306,23 @@ pub fn ins_land_nft_for_minting(deps: DepsMut,  _env : Env,
 
 const DEFAULT_EXTERN_URL_PREFIX : &str = "https://neworld.techchee.com/land-nft/";
 
-pub fn mint_land_nft(deps: DepsMut,  _env : Env, 
+pub fn mint_land_nft(mut deps: DepsMut,  _env : Env, 
     info: MessageInfo, _key : String, _extern_url_prefix : Option <String>) -> Result<Response, ContractError> {
+
+    let deps_branch = deps.branch();
 
     let stored_land = LAND_NFTS.key(_key.as_str());
 
-    let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").expect(
+    let land_nft = stored_land.may_load(deps_branch.storage).expect("Failed to find land nft").expect(
         format!("Failed to unwrap, key not found :\"{}\"", _key).as_str());
+
+    if land_nft.status.is_some() {
+
+        return Err(ContractError::CustomErrorMesg{ message : 
+        format!("Land NFT {} already minted or transferred", _key)});
+    }
+
+    let mut land_nft2 = land_nft.clone();
 
     let mut  ext_url_prefix = _extern_url_prefix ;
 
@@ -345,12 +355,20 @@ pub fn mint_land_nft(deps: DepsMut,  _env : Env,
 
     let mint_msg = cw721_base::msg::ExecuteMsg::Mint(msg.clone());
 
-    let res = MyNftMintingContract::default().execute(deps, _env.clone(), info, mint_msg);
+    let res = MyNftMintingContract::default().execute(deps_branch, _env.clone(), info, mint_msg);
 
 
     match res {
 
         Ok(_) =>  {
+
+            let date_updated = _env.block.time;
+
+            land_nft2.date_updated = date_updated;
+            land_nft2.status = Some(crate::state::LAND_NFT_STATUS_MINTED);
+
+            LAND_NFTS.save(deps.storage, key.as_str(), &land_nft2)?;
+
 
             Ok(Response::new().add_attribute("method", "land_nft_minted"))
         },

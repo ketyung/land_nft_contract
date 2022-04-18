@@ -64,6 +64,16 @@ pub enum ExecuteMsg {
         creator_wallet : Addr,
     },
 
+
+    InstantiateMinting {
+        for_key : String, 
+    },
+
+    MintLandNft {
+        for_key : String, 
+        external_url_prefix : Option<String>,
+    }
+
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
