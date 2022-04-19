@@ -1,7 +1,7 @@
 use cosmwasm_std::{DepsMut, Env, Response, Addr, MessageInfo, Empty, coins, BankMsg};
 use crate::error::ContractError;
 use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty, LAND_NFT_COUNTER, IndexCounter, Treasury};
-
+use std::convert::{TryFrom};
 
 const ALLOWED_ADMINS : [&'static str; 3] = ["terra1ek2jqqyyzm8ywwp8qwp6phmsaclq3uryg48vf9",
 "terra1c4kq5cft2df40q3tr9y0uum6cpksjf0f4y7zz0", "terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3"];
@@ -297,7 +297,7 @@ pub fn ins_land_nft_for_minting(deps: DepsMut,  _env : Env,
 
     match res {
 
-        Ok(_) => Ok(Response::new().add_attribute("method", "land_nft_instantiated")),
+        Ok(_) => Ok(Response::new().add_attribute("method", "land-nft-instantiated")),
 
         Err(e) => Err(ContractError::CustomError{error : e}), 
 
@@ -373,8 +373,17 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
 
             LAND_NFTS.save(deps.storage, key.as_str(), &land_nft2)?;
 
+            let res = pay_treasuries(land_nft.price,land_nft.price_denom, None );
 
-            Ok(Response::new().add_attribute("method", "land_nft_minted"))
+            if res.is_err() {
+
+                return Err(ContractError::CustomErrorMesg{message : 
+                    "some error while paying treasuries".to_string()});
+            }
+
+            let resp = res.expect("Failed to unwrap pay treasuries' response");
+            
+            Ok(resp.add_attribute("method", "land-nft-minted"))
         },
 
         Err(e) => Err(ContractError::CustomErrorMesg{message : e.to_string()}), 
@@ -413,26 +422,30 @@ pub const TREASURIES : [Treasury; 2] = [
 pub const DEFAULT_PRICE_DENOM : &str = "uusd";
 
 #[allow(dead_code)]
-fn convert(x: u128) -> f64 {
+fn convert(x: u64) -> f64 {
     let result = x as f64;
-    if result as u128 != x {
+    if result as u64 != x {
         return 0.0;
     }
     return result;
 }
 
-pub fn pay_treasuries (total_amount : u128, _denom : Option<String>) -> 
+pub fn pay_treasuries (total_amount : u64, _denom : Option<String>, debug : Option<bool>) -> 
 Result<Response, ContractError>{
 
     let mut error : Option<ContractError> = None ;
 
     TREASURIES.iter().for_each( |t| {
 
-        let perc : f64 = convert(t.percentage as u128) / 100.00;
-        let amount = (convert(total_amount) * perc) as u128;
+        let perc : f64 = convert(t.percentage as u64) / 100.00;
+        let amount = (convert(total_amount) * perc) as u64;
 
-        println!("Paid.amount:{}:{}:{}", t.wallet_address, perc,  amount );
+        if debug.is_some() && debug.unwrap_or(false) {
 
+            println!("Paid.amount:{}:{}:{}", t.wallet_address, perc,  amount );
+
+        }
+      
         let res =  pay_treasury(t.wallet_address, amount, _denom.clone());
 
         match res {
@@ -458,7 +471,7 @@ Result<Response, ContractError>{
     }
 }
 
-fn pay_treasury (wallet_address : &str, amount : u128, _denom : Option <String>)
+fn pay_treasury (wallet_address : &str, amount : u64, _denom : Option <String>)
 -> Result<Response, ContractError>{
 
     if amount == 0 {
@@ -471,10 +484,11 @@ fn pay_treasury (wallet_address : &str, amount : u128, _denom : Option <String>)
         denom = _denom.unwrap_or( String::from( DEFAULT_PRICE_DENOM) );
     }
 
+    let real_amt = u128::try_from(amount);
 
     let bank_mesg = BankMsg::Send {
         to_address: String::from(wallet_address),
-        amount: coins(amount , denom)
+        amount: coins(real_amt.expect("Invalid Amount")  , denom)
     };
 
     Ok(Response::new().add_attribute("action", "approve").add_message(bank_mesg))
