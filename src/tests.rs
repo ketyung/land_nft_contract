@@ -103,6 +103,15 @@ mod tests {
         let res = query(deps.as_ref(), mock_env(), msg).expect("failed to unwrap res of all nft info");
         let value : cw721::AllNftInfoResponse<Metadata> = from_binary(&res).expect("failed to unwrap binary");
         println!("\n\nres.all.nft.info :: {:?}", value);
+
+
+        let msg = QueryMsg::MintedTokensByOwner{ owner : info.sender.to_string(), start_after : None, limit : None};
+        let res = query(deps.as_ref(), mock_env(), msg).expect("failed to unwrap res of minted tokens by owner");
+        let value : cw721::TokensResponse = from_binary(&res).expect("Failed to unwrap binary!!");
+       
+        println!("\n\nres.minted.tokens.by_owner:{}:: {:?}", info.sender.to_string(), value);
+
+
     }
 
     #[test]
