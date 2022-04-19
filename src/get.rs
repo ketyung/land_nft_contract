@@ -1,4 +1,5 @@
-use crate::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse, LandNftsResponse, LandNftResponse};
+use crate::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse, 
+    LandNftsResponse, LandNftResponse, LandNftCountResponse};
 use cosmwasm_std::{Deps, Env, StdResult, Order, Binary};
 use crate::state::{LAND_NFTS, LandNftMediaType, LandNftRoyalty, LandNft};
 use cw_storage_plus::Bound;
@@ -143,6 +144,7 @@ start_after: Option<String>, limit: Option<u32>) ->StdResult<LandNftsResponse> {
                 }
             }).cloned().collect::<Vec<LandNft>>();
 
+        
             Ok(LandNftsResponse{land_nfts:_filtered})
 
         },
@@ -155,6 +157,24 @@ start_after: Option<String>, limit: Option<u32>) ->StdResult<LandNftsResponse> {
 
 }
 
+
+pub fn land_nfts_count_by(deps : Deps , status : Option<u8>)
+->StdResult<LandNftCountResponse>{
+
+    let resp : StdResult<LandNftsResponse> = get_all_land_nfts_by(deps, status, None, None);
+
+    match resp {
+        Ok(r) =>{
+
+            Ok(LandNftCountResponse{ count :r.land_nfts.len() })
+        },
+
+        Err(_)=>{
+
+            Ok(LandNftCountResponse{ count : 0 })
+        }
+    }
+}
 
 pub fn get_all_minted_tokens(deps : Deps ,  _env : Env,
     start_after: Option<String>, limit: Option<u32>) -> StdResult<Binary>{

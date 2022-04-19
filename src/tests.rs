@@ -43,8 +43,40 @@ mod tests {
         let res = query(deps.as_ref(), mock_env(), msg).expect("Failed to unwrap res!!!");
 
         let value: LandNftsResponse = from_binary(&res).unwrap();
-        println!("filtered.res.value:: {:?}", value);
+        value.land_nfts.iter().for_each (|ll| {
 
+            let l = ll.clone();
+            println!("\n{} :: name::{}, total_size:{}, owner:{}, addr :{}", l.key.unwrap_or("No.key".to_string()),
+            l.name.unwrap_or("None".to_string()),
+            l.total_size,l.owner, l.addr.unwrap_or("N/A".to_string()) );
+        });
+       
+        let minter = mock_info("terra1ek2jqqyyzm8ywwp8qwp6phmsaclq3uryg48vf9", &coins(2, "token"));
+       
+        let msg = ExecuteMsg::InsAndMintLandNft {
+            for_key : "land_nft_2".to_string(),
+            external_url_prefix : None, 
+        };
+        let res = execute(deps.as_mut(), mock_env(), minter, msg);
+        println!("\nminting.res::{:?}", res);
+
+
+
+        let msg = QueryMsg::GetAllLandNftsBy{ status : Some(crate::state::LAND_NFT_STATUS_MINTED), 
+            start_after : None, limit : None};
+
+        let res = query(deps.as_ref(), mock_env(), msg).expect("Failed to unwrap res!!!");
+
+        println!("\nMinted.nfts:::\n");
+
+        let value: LandNftsResponse = from_binary(&res).unwrap();
+        value.land_nfts.iter().for_each (|ll| {
+
+            let l = ll.clone();
+            println!("\n{} :: name::{}, total_size:{}, owner:{}, addr :{}", l.key.unwrap_or("No.key".to_string()),
+            l.name.unwrap_or("None".to_string()),
+            l.total_size,l.owner, l.addr.unwrap_or("N/A".to_string()) );
+        });
        
     }
 

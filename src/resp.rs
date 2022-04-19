@@ -29,3 +29,8 @@ pub struct LandNftResponse {
     
     pub land_nft : LandNft,
 }
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct LandNftCountResponse {
+    pub count : usize,
+}
