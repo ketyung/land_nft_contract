@@ -102,6 +102,16 @@ mod tests {
         println!("\nGet.Minted.By.index::{:?}\n", value.land_nft);
 
 
+
+        let msg = QueryMsg::AllNftInfo { token_id : "land_nft_2".to_string()};
+
+        let res = query(deps.as_ref(), mock_env(), msg).expect("failed to unwrap!!");
+
+        let value : cw721::AllNftInfoResponse<Metadata> = from_binary(&res).unwrap();
+
+        println!("\nMinted.Land.Nft.info::{:?}\n", value);
+
+
     }
 
   

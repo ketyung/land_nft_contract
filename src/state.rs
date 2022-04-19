@@ -156,7 +156,7 @@ type Trait = cw721_metadata_onchain::Trait;
 
 impl LandNft {
 
-    pub fn to_metadata_traits(&self) -> Vec<Trait>{
+    pub fn to_metadata_attributes(&self) -> Vec<Trait>{
 
         let mut traits : Vec<Trait> = Vec::new();
 

@@ -338,7 +338,7 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
     let mut _image_url : Option<String> = land_nft.default_media_type_url(crate::state::MEDIA_TYPE_IMAGE);
     let mut _video_url : Option<String> = land_nft.default_media_type_url(crate::state::MEDIA_TYPE_VIDEO);
     let mut _anim_url : Option<String> = land_nft.default_media_type_url(crate::state::MEDIA_TYPE_ANIMATION);
-    
+    let attribs = land_nft.to_metadata_attributes();
     
     let ext = Some(Metadata {
         description: land_nft.description,
@@ -347,6 +347,7 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
         youtube_url : _video_url,
         animation_url : _anim_url, 
         external_url : ext_url.clone() ,
+        attributes : Some(attribs), 
         ..Metadata::default()
     });
 
