@@ -78,7 +78,8 @@ mod tests {
         value.land_nfts.iter().for_each (|ll| {
 
             let l = ll.clone();
-            println!("\n{} :: name::{}, total_size:{}, owner:{}, addr :{}", l.key.unwrap_or("No.key".to_string()),
+            println!("\n{} :: name::{}, total_size:{}, owner:{}, addr :{}", 
+            l.key.unwrap_or("No.key".to_string()),
             l.name.unwrap_or("None".to_string()),
             l.total_size,l.owner, l.addr.unwrap_or("N/A".to_string()) );
         });
@@ -91,6 +92,15 @@ mod tests {
         let value: LandNftCountResponse = from_binary(&res).unwrap();
 
         println!("\nMinted.nft.count::{}\n", value.count);
+
+        let msg = QueryMsg::GetLandNftByIndex { status : Some(crate::state::LAND_NFT_STATUS_MINTED) , index :0 };
+
+        let res = query(deps.as_ref(), mock_env(), msg).expect("failed to unwrap!!");
+
+        let value : OptionalLandNftResponse = from_binary(&res).unwrap();
+
+        println!("\nGet.Minted.By.index::{:?}\n", value.land_nft);
+
 
     }
 

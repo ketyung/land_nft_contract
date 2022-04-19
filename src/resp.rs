@@ -31,6 +31,12 @@ pub struct LandNftResponse {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct OptionalLandNftResponse {
+    
+    pub land_nft : Option<LandNft>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct LandNftCountResponse {
     pub count : usize,
 }

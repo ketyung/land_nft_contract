@@ -1,8 +1,9 @@
 use crate::resp::{LandNftMediaTypesResponse, LandNftRoyaltiesResponse, 
-    LandNftsResponse, LandNftResponse, LandNftCountResponse};
+    LandNftsResponse, LandNftResponse, LandNftCountResponse, OptionalLandNftResponse};
 use cosmwasm_std::{Deps, Env, StdResult, Order, Binary};
 use crate::state::{LAND_NFTS, LandNftMediaType, LandNftRoyalty, LandNft};
 use cw_storage_plus::Bound;
+use std::convert::TryFrom;
 
 pub fn get_land_nft(deps: Deps, _key : String ) -> StdResult<LandNftResponse>{
 
@@ -11,7 +12,7 @@ pub fn get_land_nft(deps: Deps, _key : String ) -> StdResult<LandNftResponse>{
     let land_nft = stored_land.may_load(deps.storage).expect("Failed to find land nft").expect(
         format!("Failed to unwrap, key not found :\"{}\"", _key).as_str());
     
-    Ok (LandNftResponse { land_nft : land_nft })
+    Ok (LandNftResponse { land_nft :land_nft })
 }
 
 pub fn get_land_nft_royalties (deps: Deps, _key : String ) -> StdResult<LandNftRoyaltiesResponse>{
@@ -174,6 +175,36 @@ pub fn land_nfts_count_by(deps : Deps , status : Option<u8>)
             Ok(LandNftCountResponse{ count : 0 })
         }
     }
+}
+
+
+pub fn get_by_index_in(deps : Deps, status : Option<u8>, index : u32) -> StdResult<OptionalLandNftResponse>{
+
+    let resp : StdResult<LandNftsResponse> = get_all_land_nfts_by(deps, status, None, None);
+
+    let mut land_nft : Option<LandNft> = None;
+
+    match resp {
+        Ok(r) =>{
+
+            for (pos, e) in r.land_nfts.iter().enumerate() {
+                
+                if pos == usize::try_from(index).unwrap_or(0) {
+
+                    land_nft = Some(e.clone()); 
+                    break;
+                }
+            }
+        },
+
+        Err(_)=>{
+
+            land_nft = None
+        }
+    }
+
+    Ok(OptionalLandNftResponse{ land_nft : land_nft})
+
 }
 
 pub fn get_all_minted_tokens(deps : Deps ,  _env : Env,

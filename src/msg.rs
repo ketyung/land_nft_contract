@@ -95,9 +95,14 @@ pub enum QueryMsg {
         start_after : Option<String>,
         limit: Option<u32>
     },
-  
+
     GetCountOfLandNftsBy {
         status : Option<u8>, 
+    },
+
+    GetLandNftByIndex {
+        status : Option<u8>, 
+        index : u32, 
     },
   
     GetLandNftMediaTypes {
