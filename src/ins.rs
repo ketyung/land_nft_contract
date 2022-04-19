@@ -415,8 +415,8 @@ pub fn ins_and_mint_nft (mut deps: DepsMut,  _env : Env,
 
 
 pub const TREASURIES : [Treasury; 2] = [
-    Treasury {wallet_address : "terra1c4kq5cft2df40q3tr9y0uum6cpksjf0f4y7zz0", percentage : 90},
-    Treasury {wallet_address : "terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", percentage : 10} ];
+    Treasury {wallet_address : "terra1c4kq5cft2df40q3tr9y0uum6cpksjf0f4y7zz0", percentage : 95},
+    Treasury {wallet_address : "terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", percentage : 5} ];
 
 
 pub const DEFAULT_PRICE_DENOM : &str = "uusd";
