@@ -19,7 +19,7 @@ mod tests {
         let mut deps = mock_dependencies(&coins(2, "token"));
         let info = mock_info("terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", &coins(2, "token"));
        
-        for n in 1..5 {
+        for n in 1..7 {
 
             let add_mesg = ExecuteMsg::AddLandNft {
                 name : None,
@@ -57,10 +57,15 @@ mod tests {
             for_key : "land_nft_2".to_string(),
             external_url_prefix : None, 
         };
-        let res = execute(deps.as_mut(), mock_env(), minter, msg);
-        println!("\nminting.res::{:?}", res);
+        let _ = execute(deps.as_mut(), mock_env(), minter.clone(), msg);
+        
 
-
+        let msg = ExecuteMsg::InsAndMintLandNft {
+            for_key : "land_nft_4".to_string(),
+            external_url_prefix : None, 
+        };
+        let _ = execute(deps.as_mut(), mock_env(), minter, msg);
+        
 
         let msg = QueryMsg::GetAllLandNftsBy{ status : Some(crate::state::LAND_NFT_STATUS_MINTED), 
             start_after : None, limit : None};
@@ -78,6 +83,15 @@ mod tests {
             l.total_size,l.owner, l.addr.unwrap_or("N/A".to_string()) );
         });
        
+
+        let msg = QueryMsg::GetCountOfLandNftsBy{ status : Some(crate::state::LAND_NFT_STATUS_MINTED)};
+
+        let res = query(deps.as_ref(), mock_env(), msg).expect("Failed to unwrap res!!!");
+
+        let value: LandNftCountResponse = from_binary(&res).unwrap();
+
+        println!("\nMinted.nft.count::{}\n", value.count);
+
     }
 
   
