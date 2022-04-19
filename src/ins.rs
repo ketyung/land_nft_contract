@@ -304,7 +304,7 @@ pub fn ins_land_nft_for_minting(deps: DepsMut,  _env : Env,
     }
 }
 
-const DEFAULT_EXTERN_URL_PREFIX : &str = "https://neworld.techchee.com/land-nft/";
+const DEFAULT_EXTERN_URL_PREFIX : &str = "https://neworld.techchee.com/land-nft";
 
 pub fn mint_land_nft(mut deps: DepsMut,  _env : Env, 
     info: MessageInfo, _key : String, _extern_url_prefix : Option <String>) -> Result<Response, ContractError> {
