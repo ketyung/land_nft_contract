@@ -12,6 +12,42 @@ mod tests {
     use std::mem::size_of;
 
   
+    #[test]
+    fn test_filter(){
+
+
+        let mut deps = mock_dependencies(&coins(2, "token"));
+        let info = mock_info("terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", &coins(2, "token"));
+       
+        for n in 1..5 {
+
+            let add_mesg = ExecuteMsg::AddLandNft {
+                name : None,
+                description : None, 
+                total_size : 2500 * n , 
+                each_size : 100,
+                size_unit : Some("m2".to_string()),
+                addr :format!("Tmn Kingfisher 3, Lrg Wisma Keto, H{}", 5 * n), 
+                total_lands : (10 * n) as u16 , 
+                price : 125 * n ,
+                price_denom : Some("uusd".to_string()),
+            };
+    
+            let res = execute(deps.as_mut(), mock_env(), info.clone(), add_mesg);
+      
+            println!("added::{:?}", res);
+        }
+
+        let msg = QueryMsg::GetAllLandNftsBy{ status : None, start_after : None, limit : None};
+
+        let res = query(deps.as_ref(), mock_env(), msg).expect("Failed to unwrap res!!!");
+
+        let value: LandNftsResponse = from_binary(&res).unwrap();
+        println!("filtered.res.value:: {:?}", value);
+
+       
+    }
+
   
     #[test]
     fn test_land_nft(){

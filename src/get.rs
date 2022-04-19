@@ -86,7 +86,6 @@ pub fn get_all_land_nfts(deps : Deps , start_after: Option<String>, limit: Optio
 
     let land_nfts : StdResult <Vec<LandNft>> = 
     LAND_NFTS
-    //.prefix()
     .range(deps.storage, start, None, Order::Ascending)
     .take(limit)
     .map(|itm| {
@@ -118,6 +117,42 @@ pub fn get_all_land_nfts(deps : Deps , start_after: Option<String>, limit: Optio
     Ok(LandNftsResponse {
         land_nfts: land_nfts?,
     })
+}
+
+
+pub fn get_all_land_nfts_by(deps : Deps , status : Option<u8>,
+start_after: Option<String>, limit: Option<u32>) ->StdResult<LandNftsResponse> {
+
+    
+    let resp : StdResult<LandNftsResponse> = get_all_land_nfts(deps, start_after, limit);
+
+    match resp {
+
+        Ok(r) =>{
+
+            let land_nfts : Vec<LandNft> = r.land_nfts;
+            let _filtered = land_nfts.iter().filter (|l| {
+
+                if status.is_none() {
+
+                    l.status == None 
+                }
+                else {
+
+                    l.status == status 
+                }
+            }).cloned().collect::<Vec<LandNft>>();
+
+            Ok(LandNftsResponse{land_nfts:_filtered})
+
+        },
+
+        Err(_)=>{
+
+            Ok(LandNftsResponse{land_nfts: vec![]})
+        },
+    }
+
 }
 
 

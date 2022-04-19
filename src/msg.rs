@@ -90,6 +90,12 @@ pub enum QueryMsg {
         limit: Option<u32>
     },
   
+    GetAllLandNftsBy {
+        status : Option<u8>, 
+        start_after : Option<String>,
+        limit: Option<u32>
+    },
+  
     GetLandNftMediaTypes {
         for_key : String,
         media_type : u8,

@@ -310,6 +310,7 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
     info: MessageInfo, _key : String, _extern_url_prefix : Option <String>) -> Result<Response, ContractError> {
 
     let deps_branch = deps.branch();
+    let new_owner = info.clone().sender;
     
     let stored_land = LAND_NFTS.key(_key.as_str());
 
@@ -352,7 +353,7 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
     
     let msg = cw721_base::msg::MintMsg {
         token_id: key.clone() ,
-        owner: info.sender.clone().to_string(),
+        owner: new_owner.to_string(),
         token_uri: ext_url,
         extension: ext ,
     };
@@ -370,6 +371,7 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
 
             land_nft2.date_updated = date_updated;
             land_nft2.status = Some(crate::state::LAND_NFT_STATUS_MINTED);
+            land_nft2.owner = new_owner;
 
             LAND_NFTS.save(deps.storage, key.as_str(), &land_nft2)?;
 

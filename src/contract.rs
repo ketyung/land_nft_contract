@@ -11,7 +11,8 @@ use crate::ins::{add_land_nft, add_land_nft_media_type, add_land_nft_royalty,
     remove_land_nft, mint_land_nft, ins_land_nft_for_minting, ins_and_mint_nft};
 use crate::get::{get_all_land_nfts, get_land_nft_media_types, 
     get_land_nft_royalties, get_land_nft, get_all_minted_tokens,
-    get_minted_tokens_by_owner, get_minted_tokens_count, get_nft_info, get_all_nft_info};
+    get_minted_tokens_by_owner, get_minted_tokens_count, get_nft_info, 
+    get_all_nft_info, get_all_land_nfts_by};
 
 // version info for migration info
 pub const CONTRACT_NAME: &str = "crates.io:land_nft_contract";
@@ -116,6 +117,9 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
        
         QueryMsg::GetAllLandNfts { start_after, limit } =>
         to_binary(&get_all_land_nfts(deps, start_after, limit)?),
+
+        QueryMsg::GetAllLandNftsBy { status, start_after, limit} =>
+        to_binary(&get_all_land_nfts_by(deps, status, start_after, limit)?),
 
         QueryMsg::GetLandNftMediaTypes { for_key, media_type} =>
         to_binary(&get_land_nft_media_types(deps, for_key, media_type )?),
