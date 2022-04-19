@@ -1,6 +1,6 @@
-use cosmwasm_std::{DepsMut, Env, Response, Addr, MessageInfo, Empty};
+use cosmwasm_std::{DepsMut, Env, Response, Addr, MessageInfo, Empty, coins, BankMsg};
 use crate::error::ContractError;
-use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty, LAND_NFT_COUNTER, IndexCounter};
+use crate::state::{LAND_NFTS, LandNft, LandNftMediaType, LandNftRoyalty, LAND_NFT_COUNTER, IndexCounter, Treasury};
 
 
 const ALLOWED_ADMINS : [&'static str; 3] = ["terra1ek2jqqyyzm8ywwp8qwp6phmsaclq3uryg48vf9",
@@ -402,4 +402,34 @@ pub fn ins_and_mint_nft (mut deps: DepsMut,  _env : Env,
             return Err(ContractError::CustomErrorMesg{message : e.to_string()});
         }
     }
+}
+
+
+pub const TREASURIES : [Treasury; 2] = [
+    Treasury {wallet_address : "terra1c4kq5cft2df40q3tr9y0uum6cpksjf0f4y7zz0", percentage : 90},
+    Treasury {wallet_address : "terra19c4jcex5zkdky00qqjpu5u5usvjk7wklxsajp3", percentage : 10} ];
+
+
+pub const DEFAULT_PRICE_DENOM : &str = "uusd";
+
+pub fn pay_treasury (wallet_address : &str, amount : u128, _denom : Option <String>)-> Result<Response, ContractError>{
+
+    if amount == 0 {
+        return Err(ContractError::CustomErrorMesg {message : "Invalid Amount".to_string()});
+    }
+
+    let mut denom = String::from(DEFAULT_PRICE_DENOM);
+
+    if _denom != None {
+        denom = _denom.unwrap_or( String::from( DEFAULT_PRICE_DENOM) );
+    }
+
+
+    let bank_mesg = BankMsg::Send {
+        to_address: String::from(wallet_address),
+        amount: coins(amount , denom)
+    };
+
+    Ok(Response::new().add_attribute("action", "approve").add_message(bank_mesg))
+
 }

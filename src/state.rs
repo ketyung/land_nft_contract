@@ -3,6 +3,17 @@ use serde::{Deserialize, Serialize};
 use cosmwasm_std::{Addr, Timestamp};
 use cw_storage_plus::{Item, Map};
 
+
+pub struct Treasury  {
+
+    pub wallet_address : &'static str ,
+
+    pub percentage : u8, 
+}
+
+
+
+
 #[derive(Serialize, Deserialize, Clone, JsonSchema, Debug, Default)]
 pub struct Attribute {
     
