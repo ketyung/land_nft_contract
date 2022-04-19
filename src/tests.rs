@@ -232,8 +232,14 @@ mod tests {
 
         let url = nft.default_media_type_url(MEDIA_TYPE_IMAGE);
         println!("default.img.url::{}", url.unwrap_or("Failed to unwrap url of default image!!!x".to_string()));
+    }
 
 
+    #[test]
+    fn test_pay(){
+
+        let res = crate::ins::pay_treasuries(12903, None);
+        println!("paid.res::{:?}", res);
     }
 
     macro_rules! show_size {

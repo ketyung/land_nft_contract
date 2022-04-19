@@ -412,7 +412,46 @@ pub const TREASURIES : [Treasury; 2] = [
 
 pub const DEFAULT_PRICE_DENOM : &str = "uusd";
 
-pub fn pay_treasury (wallet_address : &str, amount : u128, _denom : Option <String>)-> Result<Response, ContractError>{
+
+pub fn pay_treasuries (total_amount : u128, _denom : Option<String>) -> 
+Result<Response, ContractError>{
+
+    let mut error : Option<ContractError> = None ;
+
+    TREASURIES.iter().for_each( |t| {
+
+        let perc : u128 = (t.percentage / 100) as u128;
+        let amount = (total_amount * perc) as u128;
+
+        println!("Paid.amount:{}:{}:{}", t.wallet_address, t.percentage,  amount );
+        
+        let res =  pay_treasury(t.wallet_address, amount, _denom.clone());
+
+        match res {
+
+            Ok(_) => error = None  ,
+
+            Err(e) => error = Some(ContractError::CustomErrorMesg{ message : e.to_string()} ),
+
+        }
+
+    });
+
+    if error.is_none() {
+
+        Ok(Response::new().add_attribute("action", "paid-all-teasuries"))
+    }
+    else {
+
+        let err = error.unwrap_or(ContractError::CustomErrorMesg{message: String::from(
+            "Some Error When Paying All Treasuries!")});
+
+        Err(err) 
+    }
+}
+
+fn pay_treasury (wallet_address : &str, amount : u128, _denom : Option <String>)
+-> Result<Response, ContractError>{
 
     if amount == 0 {
         return Err(ContractError::CustomErrorMesg {message : "Invalid Amount".to_string()});
