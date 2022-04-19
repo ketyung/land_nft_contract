@@ -238,7 +238,7 @@ mod tests {
     #[test]
     fn test_pay(){
 
-        let res = crate::ins::pay_treasuries(12903, None);
+        let res = crate::ins::pay_treasuries(456902, None);
         println!("paid.res::{:?}", res);
     }
 

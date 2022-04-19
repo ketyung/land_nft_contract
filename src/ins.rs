@@ -412,6 +412,14 @@ pub const TREASURIES : [Treasury; 2] = [
 
 pub const DEFAULT_PRICE_DENOM : &str = "uusd";
 
+#[allow(dead_code)]
+fn convert(x: u128) -> f64 {
+    let result = x as f64;
+    if result as u128 != x {
+        return 0.0;
+    }
+    return result;
+}
 
 pub fn pay_treasuries (total_amount : u128, _denom : Option<String>) -> 
 Result<Response, ContractError>{
@@ -420,11 +428,11 @@ Result<Response, ContractError>{
 
     TREASURIES.iter().for_each( |t| {
 
-        let perc : u128 = (t.percentage / 100) as u128;
-        let amount = (total_amount * perc) as u128;
+        let perc : f64 = convert(t.percentage as u128) / 100.00;
+        let amount = (convert(total_amount) * perc) as u128;
 
-        println!("Paid.amount:{}:{}:{}", t.wallet_address, t.percentage,  amount );
-        
+        println!("Paid.amount:{}:{}:{}", t.wallet_address, perc,  amount );
+
         let res =  pay_treasury(t.wallet_address, amount, _denom.clone());
 
         match res {
