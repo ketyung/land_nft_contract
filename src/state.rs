@@ -152,6 +152,75 @@ pub struct LandNft {
     pub date_updated : Timestamp, 
 }
 
+type Trait = cw721_metadata_onchain::Trait;
+
+impl LandNft {
+
+    pub fn to_metadata_traits(&self) -> Vec<Trait>{
+
+        let mut traits : Vec<Trait> = Vec::new();
+
+        traits.push( Trait {
+            display_type : Some("Total Size".to_string()),
+            trait_type : "total-size".to_string(),
+            value : format!("{} {}", self.total_size, self.size_unit.clone().unwrap_or("m2".to_string()))
+        });
+
+        if self.each_size.is_some() {
+
+            traits.push( Trait {
+                display_type : Some("Unit Size".to_string()),
+                trait_type : "unit-size".to_string(),
+                value : format!("{} {}", self.each_size.unwrap_or(0), 
+                self.size_unit.clone().unwrap_or("m2".to_string()))
+            });
+        }
+        
+
+        if self.addr.is_some() {
+
+            traits.push( Trait {
+                display_type : Some("Address".to_string()),
+                trait_type : "address".to_string(),
+                value : self.addr.clone().unwrap_or("N/A".to_string())
+            });
+        }
+
+
+        traits.push( Trait {
+            display_type : Some("Total Number Of Lands".to_string()),
+            trait_type : "total-lands".to_string(),
+            value : format!("{}", self.total_lands)
+        });
+ 
+        traits.push( Trait {
+            display_type : Some("Symbol".to_string()),
+            trait_type : "symbol".to_string(),
+            value : self.symbol.clone()
+        });
+ 
+        if self.other_attributes.is_some () {
+
+            let attrbs : Vec<Attribute> = self.other_attributes.clone().unwrap_or(vec![]);
+            attrbs.iter().for_each (|aa|{
+
+                let a = aa.clone();
+                traits.push (
+                    Trait{
+                        display_type: a.display_type,
+                        trait_type : a.attribute_type,
+                        value : a.value.unwrap_or("N/A".to_string()) ,
+                    }
+                );
+            });
+        }
+
+        traits
+
+    }
+}
+
+
 impl LandNft {
 
     pub fn new( 
@@ -390,6 +459,5 @@ impl LandNft {
     }
 
 }
-
 
 
