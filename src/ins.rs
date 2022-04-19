@@ -330,6 +330,10 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
         ext_url_prefix = Some(DEFAULT_EXTERN_URL_PREFIX.to_string());
     }
 
+    let key = land_nft.clone().key.expect("Failed to unwrap land nft's key");
+    let ext_url : Option<String> = Some(format!("{}/{}", ext_url_prefix.unwrap(), key));
+
+
     let mut _image_url : Option<String> = land_nft.default_media_type_url(crate::state::MEDIA_TYPE_IMAGE);
     let mut _video_url : Option<String> = land_nft.default_media_type_url(crate::state::MEDIA_TYPE_VIDEO);
     let mut _anim_url : Option<String> = land_nft.default_media_type_url(crate::state::MEDIA_TYPE_ANIMATION);
@@ -341,15 +345,15 @@ pub fn mint_land_nft(mut deps: DepsMut,  _env : Env,
         image : _image_url, 
         youtube_url : _video_url,
         animation_url : _anim_url, 
+        external_url : ext_url.clone() ,
         ..Metadata::default()
     });
 
-    let key = land_nft.key.expect("Failed to unwrap land nft's key");
-
+    
     let msg = cw721_base::msg::MintMsg {
         token_id: key.clone() ,
         owner: info.sender.clone().to_string(),
-        token_uri: Some(format!("{}/{}", ext_url_prefix.unwrap(), key)),
+        token_uri: ext_url,
         extension: ext ,
     };
 

@@ -103,10 +103,23 @@ pub enum QueryMsg {
     GetLandNft {
         key : String, 
     },
-    /*
-    NumOfMintedTokens {
+
+    NumOfMintedTokens {},
+
+    MintedTokensByOwner {
+        owner : String, 
+        start_after: Option<String>,
+        limit: Option<u32>,
     },
-    */
+
+    NftInfo {
+        token_id : String, 
+    },
+
+    AllNftInfo {
+        token_id : String,
+    },
+
     AllMintedTokens {
         start_after: Option<String>,
         limit: Option<u32>,

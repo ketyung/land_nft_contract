@@ -98,7 +98,11 @@ mod tests {
         let value : cw721::TokensResponse = from_binary(&res).expect("Failed to unwrap binary!!");
         println!("\n\nres.all.minted:: {:?}", value);
 
-        
+
+        let msg = QueryMsg::AllNftInfo { token_id : key.clone()};
+        let res = query(deps.as_ref(), mock_env(), msg).expect("failed to unwrap res of all nft info");
+        let value : cw721::AllNftInfoResponse<Metadata> = from_binary(&res).expect("failed to unwrap binary");
+        println!("\n\nres.all.nft.info :: {:?}", value);
     }
 
     #[test]

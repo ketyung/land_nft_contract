@@ -132,3 +132,43 @@ pub fn get_all_minted_tokens(deps : Deps ,  _env : Env,
 
     crate::ins::MyNftMintingContract::default().query(deps, _env, all_tokens_msg )
 }
+
+
+pub fn get_minted_tokens_count( deps : Deps, _env : Env) -> StdResult<Binary> {
+
+    let num_tokens_msg = cw721_base::msg::QueryMsg::NumTokens{};
+    crate::ins::MyNftMintingContract::default().query(deps, _env, num_tokens_msg)
+}
+
+
+pub fn get_minted_tokens_by_owner( deps: Deps, _env : Env, owner : String ,
+    start_after: Option<String>, limit: Option<u32>) -> StdResult<Binary> {
+
+    let msg = cw721_base::msg::QueryMsg::Tokens {
+        owner : owner ,
+        start_after : start_after,
+        limit : limit,
+    };
+
+    crate::ins::MyNftMintingContract::default().query(deps, _env, msg)
+
+}
+
+pub fn get_nft_info( deps : Deps,env : Env, token_id : String ) -> StdResult<Binary>{
+
+    let msg = cw721_base::msg::QueryMsg::NftInfo {
+
+        token_id : token_id
+    };
+    crate::ins::MyNftMintingContract::default().query(deps, env, msg)
+}
+
+pub fn get_all_nft_info( deps : Deps,env : Env, token_id : String ) -> StdResult<Binary>{
+
+    let msg = cw721_base::msg::QueryMsg::AllNftInfo {
+
+        token_id : token_id,
+        include_expired : None, 
+    };
+    crate::ins::MyNftMintingContract::default().query(deps, env, msg)
+}
