@@ -279,6 +279,78 @@
         }
       },
       "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "instantiate_minting"
+      ],
+      "properties": {
+        "instantiate_minting": {
+          "type": "object",
+          "required": [
+            "for_key"
+          ],
+          "properties": {
+            "for_key": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "mint_land_nft"
+      ],
+      "properties": {
+        "mint_land_nft": {
+          "type": "object",
+          "required": [
+            "for_key"
+          ],
+          "properties": {
+            "external_url_prefix": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "for_key": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "ins_and_mint_land_nft"
+      ],
+      "properties": {
+        "ins_and_mint_land_nft": {
+          "type": "object",
+          "required": [
+            "for_key"
+          ],
+          "properties": {
+            "external_url_prefix": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "for_key": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
     }
   ],
   "definitions": {
