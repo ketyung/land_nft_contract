@@ -2,7 +2,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use cosmwasm_std::{Addr, Timestamp};
 use cw_storage_plus::{Item, Map};
-
+use std::char::from_u32;
 
 pub struct Treasury  {
 
@@ -112,6 +112,11 @@ pub const LAND_NFT_STATUS_TRANSFERRED : u8 = 2;
 
 pub const DEFAULT_LAND_NFT_SYMBOL : &str = "neworld-land-nft";
 
+pub fn default_unit_size ()-> String {
+
+    format!("m{}",from_u32(0xb0 + 2).unwrap())
+} 
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct LandNft {
 
@@ -163,7 +168,7 @@ impl LandNft {
         traits.push( Trait {
             display_type : Some("Total Size".to_string()),
             trait_type : "total-size".to_string(),
-            value : format!("{} {}", self.total_size, self.size_unit.clone().unwrap_or("m2".to_string()))
+            value : format!("{} {}", self.total_size, self.size_unit.clone().unwrap_or(default_unit_size()))
         });
 
         if self.each_size.is_some() {
@@ -172,7 +177,7 @@ impl LandNft {
                 display_type : Some("Unit Size".to_string()),
                 trait_type : "unit-size".to_string(),
                 value : format!("{} {}", self.each_size.unwrap_or(0), 
-                self.size_unit.clone().unwrap_or("m2".to_string()))
+                self.size_unit.clone().unwrap_or(default_unit_size()))
             });
         }
         

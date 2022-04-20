@@ -26,7 +26,7 @@ mod tests {
                 description : None, 
                 total_size : 2500 * n , 
                 each_size : 100,
-                size_unit : Some("m2".to_string()),
+                size_unit : Some(default_unit_size()),
                 addr :format!("Tmn Kingfisher 3, Lrg Wisma Keto, H{}", 5 * n), 
                 total_lands : (10 * n) as u16 , 
                 price : 125 * n ,
@@ -67,7 +67,7 @@ mod tests {
         let _ = execute(deps.as_mut(), mock_env(), minter, msg);
         
 
-        let msg = QueryMsg::GetAllLandNftsBy{ status : Some(crate::state::LAND_NFT_STATUS_MINTED), 
+        let msg = QueryMsg::GetAllLandNftsBy{ status : Some(LAND_NFT_STATUS_MINTED), 
             start_after : None, limit : None};
 
         let res = query(deps.as_ref(), mock_env(), msg).expect("Failed to unwrap res!!!");
@@ -85,7 +85,7 @@ mod tests {
         });
        
 
-        let msg = QueryMsg::GetCountOfLandNftsBy{ status : Some(crate::state::LAND_NFT_STATUS_MINTED)};
+        let msg = QueryMsg::GetCountOfLandNftsBy{ status : Some(LAND_NFT_STATUS_MINTED)};
 
         let res = query(deps.as_ref(), mock_env(), msg).expect("Failed to unwrap res!!!");
 
@@ -93,7 +93,7 @@ mod tests {
 
         println!("\nMinted.nft.count::{}\n", value.count);
 
-        let msg = QueryMsg::GetLandNftByIndex { status : Some(crate::state::LAND_NFT_STATUS_MINTED) , index :0 };
+        let msg = QueryMsg::GetLandNftByIndex { status : Some(LAND_NFT_STATUS_MINTED) , index :0 };
 
         let res = query(deps.as_ref(), mock_env(), msg).expect("failed to unwrap!!");
 
@@ -126,7 +126,7 @@ mod tests {
             description : None, 
             total_size : 12500, 
             each_size : 50,
-            size_unit : Some("m2".to_string()),
+            size_unit : Some(default_unit_size()),
             addr : "Tmn Kingfisher 3, Lrg Wisma Keto, H78".to_string(), 
             total_lands : 250, 
             price : 35600,
