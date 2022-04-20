@@ -1,6 +1,5 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cosmwasm_std::Addr;
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
     pub count: i32,
@@ -48,7 +47,7 @@ pub enum ExecuteMsg {
 
     AddLandNftRoyalty {
         for_key : String, 
-        creator_wallet : Addr,
+        creator_wallet : String,
         index  : u8,
         royalty : u16,
     },
@@ -61,7 +60,7 @@ pub enum ExecuteMsg {
 
     RemoveLandNftRoyalty {
         for_key : String, 
-        creator_wallet : Addr,
+        creator_wallet : String,
     },
 
 

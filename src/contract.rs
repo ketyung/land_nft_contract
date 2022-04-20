@@ -1,6 +1,6 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Addr};
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
@@ -76,7 +76,8 @@ pub fn execute(
             royalty,
         } => {
 
-            let royalty = LandNftRoyalty{ creator_wallet : creator_wallet, index : index, 
+            let royalty = LandNftRoyalty{ creator_wallet :
+                deps.api.addr_validate(creator_wallet.as_str()).expect("Failed to unwrap"), index : index, 
                 royalty : royalty, date_updated : Some(_env.block.time)};
             add_land_nft_royalty(deps, _env, info, for_key, royalty)
 
@@ -90,7 +91,7 @@ pub fn execute(
         ExecuteMsg::RemoveLandNftRoyalty {
             for_key,
             creator_wallet,
-        } => remove_land_nft_royalty(deps, _env, info,for_key, creator_wallet),
+        } => remove_land_nft_royalty(deps, _env, info,for_key, Addr::unchecked(creator_wallet)),
 
         ExecuteMsg::InstantiateMinting {
             for_key
