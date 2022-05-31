@@ -1,3 +1,5 @@
+# A contract based on CW721 for minting Land NFT for the Neworld project on Terra blockchain
+
 # CosmWasm Starter Pack
 
 This is a template to build smart contracts in Rust to run inside a
